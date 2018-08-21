@@ -7,6 +7,10 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CS155_Walton_Grant", "CS155
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Week1_Lab1", "Week1_Lab1\Week1_Lab1.csproj", "{15A72C7A-0005-4380-A8AA-78B55A42863B}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Homework1", "Homework1\Homework1.csproj", "{4C2AE400-7715-459C-936F-55815D242C5B}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Homework1_2", "Homework1_2\Homework1_2.csproj", "{690681D4-892E-414F-9163-B240465601C8}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -21,6 +25,14 @@ Global
 		{15A72C7A-0005-4380-A8AA-78B55A42863B}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{15A72C7A-0005-4380-A8AA-78B55A42863B}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{15A72C7A-0005-4380-A8AA-78B55A42863B}.Release|Any CPU.Build.0 = Release|Any CPU
+		{4C2AE400-7715-459C-936F-55815D242C5B}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{4C2AE400-7715-459C-936F-55815D242C5B}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{4C2AE400-7715-459C-936F-55815D242C5B}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{4C2AE400-7715-459C-936F-55815D242C5B}.Release|Any CPU.Build.0 = Release|Any CPU
+		{690681D4-892E-414F-9163-B240465601C8}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{690681D4-892E-414F-9163-B240465601C8}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{690681D4-892E-414F-9163-B240465601C8}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{690681D4-892E-414F-9163-B240465601C8}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
