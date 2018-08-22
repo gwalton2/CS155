@@ -10,6 +10,24 @@ namespace Homework1_2
     {
         static void Main(string[] args)
         {
+            //Begin ascii art
+            Console.WriteLine("|||||||||||||||||||||||                             #####            #####");
+            Console.WriteLine("|||||||||||||||||||||||                            #####            #####");
+            Console.WriteLine("|||||||           |||||                          #####            #####");
+            Console.WriteLine("|||||||                                         #####            #####");
+            Console.WriteLine("|||||||                            ############################################");
+            Console.WriteLine("|||||||                            ############################################");
+            Console.WriteLine("|||||||                                    #####            #####");
+            Console.WriteLine("|||||||                                   #####            #####");
+            Console.WriteLine("|||||||                        ###########################################");
+            Console.WriteLine("|||||||                        ###########################################");
+            Console.WriteLine("|||||||                              #####            #####");
+            Console.WriteLine("|||||||           |||||             #####            #####");
+            Console.WriteLine("|||||||||||||||||||||||           #####            #####");
+            Console.WriteLine("|||||||||||||||||||||||          #####            #####");
+
+            //Just to pause the screen.
+            Console.ReadLine();
         }
     }
 }
