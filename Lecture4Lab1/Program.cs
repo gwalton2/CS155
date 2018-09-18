@@ -31,8 +31,9 @@ namespace Lecture4Lab1
 
                 fine += (speed - limit) * 7;
 
-                Console.WriteLine("You were speeding. Your fine is {0}.", fine);
+                Console.WriteLine("You were speeding. Your fine is " + fine.ToString("C"));
             }
+
             else
             {
                 Console.WriteLine("You were not speeding!");
