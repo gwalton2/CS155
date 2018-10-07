@@ -95,5 +95,15 @@
   <ItemGroup>
     <None Include="App.config" />
   </ItemGroup>
+  <ItemGroup />
+  <ItemGroup>
+    <Resource Include="screenshots\hw6_11.PNG" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="screenshots\hw6_12.PNG" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="screenshots\hw6_13.PNG" />
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>
