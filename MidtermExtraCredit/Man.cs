@@ -23,6 +23,11 @@ namespace MidtermExtraCredit
             this.rank = rank;
         }
 
+        public string GetName()
+        {
+            return name;
+        }
+
         public bool IsFree()
         {
             return free;

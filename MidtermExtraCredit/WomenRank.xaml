@@ -1,0 +1,22 @@
+﻿<Page x:Class="MidtermExtraCredit.WomenRank"
+      xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+      xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+      xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+      xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+      xmlns:local="clr-namespace:MidtermExtraCredit"
+      mc:Ignorable="d" 
+      d:DesignHeight="450" d:DesignWidth="800"
+      Title="WomenRank">
+
+    <Grid>
+        <Label x:Name="nameLabel" Content="Group2 Member" HorizontalAlignment="Left" Margin="110,27,0,0" VerticalAlignment="Top" FontSize="16"/>
+        <TextBox x:Name="nameText" HorizontalAlignment="Left" Height="30" Margin="110,64,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="127" IsEnabled="False" FontSize="16"/>
+        <Label x:Name="rankLabel" Content="Group1 Rank" HorizontalAlignment="Left" Margin="440,27,0,0" VerticalAlignment="Top" FontSize="16"/>
+        <TextBox x:Name="rankText" HorizontalAlignment="Left" Height="119" Margin="421,64,0,0" TextWrapping="Wrap" Text="Input all group1 members in order of preference separated by commas" VerticalAlignment="Top" Width="369" FontSize="14"/>
+        <Button x:Name="nextButton" Content="Next Member" HorizontalAlignment="Left" Margin="134,135,0,0" VerticalAlignment="Top" Width="103" FontSize="16" Click="nextButton_Click"/>
+        <Label x:Name="group1Label" Content="All Group1 Members:" HorizontalAlignment="Left" Margin="110,249,0,0" VerticalAlignment="Top" FontSize="16"/>
+        <TextBox x:Name="group1Text" HorizontalAlignment="Left" Height="119" Margin="421,234,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="369" FontSize="14"/>
+        <Button x:Name="finishButton" Content="Next" HorizontalAlignment="Left" Margin="268,380,0,0" VerticalAlignment="Top" Width="103" FontSize="18" Click="finishButton_Click"/>
+
+    </Grid>
+</Page>

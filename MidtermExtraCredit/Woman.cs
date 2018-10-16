@@ -22,30 +22,39 @@ namespace MidtermExtraCredit
             this.rank = rank;
         }
 
-        public void Prefer(Man man)
+        public void SetEngaged(Man man)
         {
-            if (null == engaged)
+            engaged = man;
+        }
+
+        public string GetEngaged()
+        {
+            return engaged.GetName();
+        }
+
+        public string GetName()
+        {
+            return name;
+        }
+
+        public bool Prefer(Man man)
+        {
+            if (null != engaged)
             {
-                engaged = man;
-                man.ChangeStatus();
-            }
-            else
-            {
-                foreach(Man m in rank)
+                foreach (Man m in rank)
                 {
                     if (m.Equals(man))
                     {
                         engaged.ChangeStatus();
-                        man.ChangeStatus();
-                        engaged = man;
-                        break;
+                        return true;
                     }
                     if (m.Equals(engaged))
                     {
-                        break;
+                        return false;
                     }
                 }
             }
+            return true;
         }
     }
 }

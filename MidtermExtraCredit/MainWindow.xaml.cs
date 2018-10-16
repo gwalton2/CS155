@@ -18,40 +18,11 @@ namespace MidtermExtraCredit
     /// <summary>
     /// Interaction logic for MainWindow.xaml
     /// </summary>
-    public partial class MainWindow : Window
+    public partial class MainWindow : NavigationWindow
     {
         public MainWindow()
         {
             InitializeComponent();
-        }
-
-        private void StableMarriage(Woman[] women, Man[] men)
-        {
-            Man m;
-            do
-            {
-                m = GetFree(men);
-                Woman w = m.GetChoice();
-
-                while (m.IsFree())
-                {
-                    w.Prefer(m);
-                    m.Next();
-                }
-
-            } while (m != null);
-        }
-
-        private Man GetFree(Man[] men)
-        {
-            foreach (Man m in men)
-            {
-                if (m.IsFree())
-                {
-                    return m;
-                }
-            }
-            return null;
         }
     }
 }

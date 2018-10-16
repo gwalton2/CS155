@@ -1,0 +1,16 @@
+﻿<Page x:Class="MidtermExtraCredit.Pairings"
+      xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+      xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+      xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+      xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+      xmlns:local="clr-namespace:MidtermExtraCredit"
+      mc:Ignorable="d" 
+      d:DesignHeight="450" d:DesignWidth="800"
+      Title="Pairings">
+
+    <Grid>
+        <Label x:Name="pairingLabel" Content="Optimal Pairings" HorizontalAlignment="Left" Margin="313,10,0,0" VerticalAlignment="Top" FontSize="18"/>
+        <TextBox x:Name="pairingsText" HorizontalAlignment="Left" Height="359" Margin="313,81,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="169" FontSize="16" IsEnabled="False" TextAlignment="Center"/>
+
+    </Grid>
+</Page>
