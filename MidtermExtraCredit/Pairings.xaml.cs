@@ -47,6 +47,8 @@ namespace MidtermExtraCredit
 
             StableMarriage stablemarriage = new StableMarriage(women, men);
             stablemarriage.pair();
+
+            SetText();
         }
 
         private void CreateMales()
@@ -124,7 +126,7 @@ namespace MidtermExtraCredit
             foreach(Woman w in women)
             {
                 string match = w.GetName() + " -- " + w.GetEngaged();
-                master = match + "\n";
+                master += (match + "\n");
             }
 
             pairingsText.Text = master;

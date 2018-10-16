@@ -45,7 +45,7 @@ namespace MidtermExtraCredit
 
         public void Next()
         {
-            if  (pick_index < rank.Length)
+            if  (pick_index < rank.Length - 1)
             {
                 pick_index++;
             }

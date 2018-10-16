@@ -19,12 +19,10 @@ namespace MidtermExtraCredit
 
         public void pair()
         {
-            Man m;
-            do
+            Man m = GetFree(men);
+            while (m != null)
             {
-                m = GetFree(men);
                 Woman w = m.GetChoice();
-
                 while (m.IsFree())
                 {
                     if (w.Prefer(m))
@@ -33,9 +31,10 @@ namespace MidtermExtraCredit
                         m.ChangeStatus();
                     }
                     m.Next();
+                    w = m.GetChoice();
                 }
-
-            } while (m != null);
+                m = GetFree(men);
+            }
         }
 
         private Man GetFree(Man[] men)
