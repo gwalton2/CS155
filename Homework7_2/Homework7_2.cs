@@ -1,4 +1,19 @@
-﻿using System;
+﻿/// Homework No.7 Exercise No.2
+/// File Name: Homework7_2.cs
+/// @author: Grant Walton
+/// Date: Oct. 22, 2018
+/// Problem Statement: This program should use a class to convert and manipulate temperatures.
+/// Overall Plan:
+/// 1. I will create the Temperature class with two instance variables, temperature and scale(C or F).
+/// 2. I will implement constructors, getters, setters, converters, tostring, and an equals method.
+/// 3. I will implement a driver class to test my code.
+
+/// Classes needed and Purpose: Only main class is needed
+/// main class - Homework7_2
+/// Import necessary C# or user-defined packages
+/// Create main class and objects needed to implement task
+
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
