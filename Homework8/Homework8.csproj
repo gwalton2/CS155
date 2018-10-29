@@ -50,5 +50,10 @@
   <ItemGroup>
     <None Include="App.config" />
   </ItemGroup>
+  <ItemGroup>
+    <Content Include="screenshots\hw8_1.PNG" />
+    <Content Include="screenshots\hw8_2.PNG" />
+    <Content Include="screenshots\hw8_3.PNG" />
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>
