@@ -35,7 +35,10 @@ namespace FinalProject
                                               { 'p', 'p', 'p', 'p', 'p', 'p', 'p', 'p' },
                                               { 'r', 'n', 'b', 'q', 'k', 'b', 'n', 'r' } }; // lowercase is black
 
-        public ulong AllPieces { get; }
+        public ulong AllPieces
+        {
+            get { return _allpieces; }
+        }
 
         public ulong GetMoves(int rank, int file)
         {
