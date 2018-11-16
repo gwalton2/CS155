@@ -96,5 +96,22 @@
   <ItemGroup>
     <None Include="App.config" />
   </ItemGroup>
+  <ItemGroup />
+  <ItemGroup>
+    <Resource Include="icons\black_bishop.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="icons\black_king.png" />
+    <Resource Include="icons\black_knight.png" />
+    <Resource Include="icons\black_pawn.png" />
+    <Resource Include="icons\black_queen.png" />
+    <Resource Include="icons\black_rook.png" />
+    <Resource Include="icons\white_bishop.png" />
+    <Resource Include="icons\white_king.png" />
+    <Resource Include="icons\white_knight.png" />
+    <Resource Include="icons\white_pawn.png" />
+    <Resource Include="icons\white_queen.png" />
+    <Resource Include="icons\white_rook.png" />
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

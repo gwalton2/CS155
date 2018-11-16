@@ -26,12 +26,12 @@ namespace FinalProject
         ulong _allblack;
         ulong _allpieces;
 
-        char[,] chessboard = new char[8, 8] { { 'R', 'N', 'B', 'Q', 'K', 'B', 'N', 'R' }, //uppercase is white
+        char[,] _chessboard = new char[8, 8] { { 'R', 'N', 'B', 'Q', 'K', 'B', 'N', 'R' }, //uppercase is white
                                               { 'P', 'P', 'P', 'P', 'P', 'P', 'P', 'P' },
-                                              { ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ' },
-                                              { ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ' }, //Board reversed visually to match index
-                                              { ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ' },
-                                              { ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ' },
+                                              { '-', '-', '-', '-', '-', '-', '-', '-' },
+                                              { '-', '-', '-', '-', 'Q', '-', '-', '-' }, //Board reversed visually to match index
+                                              { '-', '-', '-', '-', '-', '-', '-', '-' },
+                                              { '-', '-', '-', '-', '-', '-', '-', '-' },
                                               { 'p', 'p', 'p', 'p', 'p', 'p', 'p', 'p' },
                                               { 'r', 'n', 'b', 'q', 'k', 'b', 'n', 'r' } }; // lowercase is black
 
@@ -40,9 +40,26 @@ namespace FinalProject
             get { return _allpieces; }
         }
 
+        public char[,] ChessBoard
+        {
+            get { return _chessboard;  }
+        }
+
+        public bool IsOccupied(int rank, int file)
+        {
+            char loc = _chessboard[rank, file];
+
+            return !loc.Equals('-');
+        }
+
+        public void Move(int og_index, int new_index)
+        {
+
+        }
+
         public ulong GetMoves(int rank, int file)
         {
-            char piece = chessboard[rank, file];
+            char piece = _chessboard[rank, file];
 
             switch (piece)
             {
@@ -86,6 +103,5 @@ namespace FinalProject
                     return 0;
             }
         }
-
     }
 }
