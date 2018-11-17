@@ -27,13 +27,41 @@ namespace FinalProject
         static ulong clearH = 0x7F7F7F7F7F7F7F7F;
         static ulong clearG = 0xBFBFBFBFBFBFBFBF;
 
+        private static void DrawBitboard(ulong bitBoard)
+        {
+            string[,] chessBoard = new string[8, 8];
+            for (int i = 0; i < 64; i++)
+            {
+                chessBoard[i / 8, i % 8] = "";
+            }
+            for (int i = 0; i < 64; i++)
+            {
+                if (((bitBoard >> i) & 1) == 1)
+                {
+                    chessBoard[i / 8, i % 8] = "1";
+                }
+                else
+                {
+                    chessBoard[i / 8, i % 8] = "0";
+                }
+            }
+            for (int i = 0; i < 8; i++)
+            {
+                for (int j = 0; j < 8; j++)
+                {
+                    Console.Write(chessBoard[i, j]);
+                }
+                Console.WriteLine();
+            }
+        }
+
         public static ulong Reverse(ulong orig)
         {
             ulong rev = 0;
-            while (orig != 0)
+            for (int i = 0; i < 64; i++)
             {
                 rev <<= 1;
-                rev ^= orig & 1;
+                rev ^= (orig & 1);
                 orig >>= 1;
             }
             return rev;
@@ -43,7 +71,7 @@ namespace FinalProject
         {
             int index = rank * 8 + file; //Converts rank and file into index: A1 = 0, H8 = 63
             ulong s = (ulong)(0x1 << index); //Creates bitboard consisting only of selected piece
-            ulong o = (occupied - s) & mask; //Creates final o variable by removing piece and focusing on mask
+            ulong o = (occupied & ~s) & mask; //Creates final o variable by removing piece from total occupied and focusing on mask
 
             ulong unfiltered = ((o - 2 * s) ^ Reverse(Reverse(o) - 2 * Reverse(s))) & mask; //hyperbola quintessance algorithm
             return unfiltered & ~piececolor; //Trims off capturing of own pieces

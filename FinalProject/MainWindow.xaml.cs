@@ -65,7 +65,7 @@ namespace FinalProject
                     move_indexes.Add(counter);
                 }
                 counter++;
-                bitboard = bitboard >> 1;
+                bitboard >>= 1;
             }
             return move_indexes;
         }
