@@ -4,9 +4,8 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Homework11
+namespace Homework10
 {
-
     class Alien
     {
         public int _health; //0 = dead, 100 = full
@@ -30,6 +29,11 @@ namespace Homework11
             get { return _name; }
 
             set { _name = value; }
+        }
+
+        public virtual int GetDamage()
+        {
+            return 0;
         }
     }
 }

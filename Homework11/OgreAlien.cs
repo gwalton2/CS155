@@ -4,13 +4,13 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Homework11
+namespace Homework10
 {
     class OgreAlien : Alien
     {
         public OgreAlien(int health, string name) : base(health, name) { }
 
-        public int GetDamage()
+        public override int GetDamage()
         {
             return 6;
         }

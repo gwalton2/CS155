@@ -47,12 +47,15 @@
     <Compile Include="AlienPack.cs" />
     <Compile Include="MarshmallowAlien.cs" />
     <Compile Include="OgreAlien.cs" />
-    <Compile Include="Program.cs" />
+    <Compile Include="Homwork10.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="SnakeAlien.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="screenshots\hw10.PNG" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>
