@@ -22,19 +22,23 @@ namespace FinalProject
         ulong _blackqueen = 0x1000000000000000;
         ulong _blackking = 0x800000000000000;
 
+        List<ulong> boardList;
+
         ulong _allwhite;
         ulong _allblack;
         ulong _allpieces;
 
         public Board()
         {
+            boardList = new List<ulong> { _whitepawns, _whiteknights, _whitebishops, _whiterooks, _whitequeen, _whiteking,
+                                          _blackpawns, _blackknights, _blackbishops, _blackrooks, _blackqueen, _blackking };
             Update();
         }
 
         char[,] _chessboard = new char[8, 8] { { 'R', 'N', 'B', 'Q', 'K', 'B', 'N', 'R' }, //uppercase is white
                                               { 'P', 'P', 'P', 'P', 'P', 'P', 'P', 'P' },
                                               { '-', '-', '-', '-', '-', '-', '-', '-' },
-                                              { '-', '-', '-', '-', 'B', '-', '-', '-' }, //Board reversed visually to match index
+                                              { '-', '-', '-', '-', '-', '-', '-', '-' }, //Board reversed visually to match index
                                               { '-', '-', '-', '-', '-', '-', '-', '-' },
                                               { '-', '-', '-', '-', '-', '-', '-', '-' },
                                               { 'p', 'p', 'p', 'p', 'p', 'p', 'p', 'p' },
@@ -64,9 +68,33 @@ namespace FinalProject
             return !loc.Equals('-');
         }
 
-        public void Move(int og_index, int new_index)
+        public void MoveCharBoard(int og_index, int new_index)
         {
+            int og_rank = og_index / 8;
+            int og_file = og_index % 8;
+            int new_rank = new_index / 8;
+            int new_file = new_index % 8;
 
+            char og_char = _chessboard[og_rank, og_file];
+            _chessboard[og_rank, og_file] = '-';
+            _chessboard[new_rank, new_file] = og_char;
+        }
+
+        public void MoveBitBoard(int og_index, int new_index)
+        {
+            ulong move = Moves.GetMoveBitboard(og_index, new_index);
+            ulong piece = (ulong)(0x1 << og_index);
+
+            for (int i = 0; i < boardList.Count; i++)
+            {
+                ulong board = boardList[i];
+                if ((board ^ piece) != board)
+                {
+                    board ^= move;
+                    break;
+                }
+            }
+            Update();
         }
 
         public ulong GetMoves(int rank, int file)

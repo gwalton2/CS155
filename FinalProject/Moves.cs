@@ -55,6 +55,14 @@ namespace FinalProject
             }
         }
 
+        public static ulong GetMoveBitboard(int og_index, int new_index)
+        {
+            ulong og_piece = (ulong)(0x1 << og_index);
+            ulong new_piece = (ulong)(0x1 << new_index);
+
+            return og_piece | new_piece;
+        }
+
         public static ulong Reverse(ulong orig)
         {
             ulong rev = 0;
@@ -149,7 +157,7 @@ namespace FinalProject
             ulong piece = (ulong)(0x1 << index);
 
             ulong one_step = (piece << 8) & ~occupied;
-            ulong two_step = ((one_step << 8) & ~occupied) & rankmasks[1];
+            ulong two_step = ((piece & rankmasks[1]) << 16) & ~occupied;
             ulong pawnmoves = one_step | two_step;
 
             ulong left_attack = (piece & clearA) << 7;
@@ -165,7 +173,7 @@ namespace FinalProject
             ulong piece = (ulong)(0x1 << index);
 
             ulong one_step = (piece >> 8) & ~occupied;
-            ulong two_step = ((one_step >> 8) & ~occupied) & rankmasks[6];
+            ulong two_step = ((piece & rankmasks[6]) >> 16) & ~occupied;
             ulong pawnmoves = one_step | two_step;
 
             ulong left_attack = (piece & clearA) >> 9;

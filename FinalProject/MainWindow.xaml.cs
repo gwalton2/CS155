@@ -127,7 +127,8 @@ namespace FinalProject
             {
                 ResetColor();
                 Move(_00);
-                board.Move(selected_index, 0);
+                board.MoveCharBoard(selected_index, 0);
+                board.MoveBitBoard(selected_index, 0);
             }
             else if (board.IsOccupied(0, 0))
             {
@@ -141,12 +142,41 @@ namespace FinalProject
 
         private void _01_Click(object sender, RoutedEventArgs e)
         {
+            if (_01.Background.Equals(Brushes.Green))
+            {
+                ResetColor();
+                Move(_01);
+                board.MoveCharBoard(selected_index, 1);
+                board.MoveBitBoard(selected_index, 1);
+            }
+            else if (board.IsOccupied(0, 1))
+            {
+                selected = _01;
+                selected_index = 1;
+
+                ulong moves = board.GetMoves(0, 1);
+                DisplayMoves(moves);
+            }
 
         }
 
         private void _02_Click(object sender, RoutedEventArgs e)
         {
+            if (_02.Background.Equals(Brushes.Green))
+            {
+                ResetColor();
+                Move(_02);
+                board.MoveCharBoard(selected_index, 2);
+                board.MoveBitBoard(selected_index, 2);
+            }
+            else if (board.IsOccupied(0, 2))
+            {
+                selected = _02;
+                selected_index = 2;
 
+                ulong moves = board.GetMoves(0, 2);
+                DisplayMoves(moves);
+            }
         }
 
         private void _03_Click(object sender, RoutedEventArgs e)
@@ -196,7 +226,21 @@ namespace FinalProject
 
         private void _14_Click(object sender, RoutedEventArgs e)
         {
+            if (_14.Background.Equals(Brushes.Green))
+            {
+                ResetColor();
+                Move(_14);
+                board.MoveCharBoard(selected_index, 12);
+                board.MoveBitBoard(selected_index, 12);
+            }
+            else if (board.IsOccupied(1, 4))
+            {
+                selected = _14;
+                selected_index = 12;
 
+                ulong moves = board.GetMoves(1, 4);
+                DisplayMoves(moves);
+            }
         }
 
         private void _15_Click(object sender, RoutedEventArgs e)
@@ -240,7 +284,8 @@ namespace FinalProject
             {
                 ResetColor();
                 Move(_24);
-                board.Move(selected_index, 20);
+                board.MoveCharBoard(selected_index, 20);
+                board.MoveBitBoard(selected_index, 20);
             }
             else if (board.IsOccupied(2, 4))
             {
@@ -293,7 +338,8 @@ namespace FinalProject
             {
                 ResetColor();
                 Move(_34);
-                board.Move(selected_index, 28);
+                board.MoveCharBoard(selected_index, 28);
+                board.MoveBitBoard(selected_index, 28);
             }
             else if (board.IsOccupied(3, 4))
             {
