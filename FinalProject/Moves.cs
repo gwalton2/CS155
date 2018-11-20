@@ -45,13 +45,13 @@ namespace FinalProject
                     chessBoard[i / 8, i % 8] = "0";
                 }
             }
-            for (int i = 0; i < 8; i++)
+            for (int i = 0; i < 64; i++)
             {
-                for (int j = 0; j < 8; j++)
+                if (i % 8 == 0)
                 {
-                    Console.Write(chessBoard[i, j]);
+                    Console.WriteLine();
                 }
-                Console.WriteLine();
+                Console.Write(chessBoard[i / 8, i % 8]);
             }
         }
 
@@ -74,28 +74,37 @@ namespace FinalProject
             ulong o = (occupied & ~s) & mask; //Creates final o variable by removing piece from total occupied and focusing on mask
 
             ulong unfiltered = ((o - 2 * s) ^ Reverse(Reverse(o) - 2 * Reverse(s))) & mask; //hyperbola quintessance algorithm
+
             return unfiltered & ~piececolor; //Trims off capturing of own pieces
         }
 
         public static ulong GetBishopMoves(int rank, int file, ulong occupied, ulong piececolor)
         {
             int index = rank * 8 + file;
-            ulong mask = diagonalmasks[(index % 8) + 7 - (index / 8)] | adiagonalmasks[(index / 8) + (index % 8)];
-            return SlidingMoves(rank, file, mask, occupied, piececolor);
+            ulong diag_moves = SlidingMoves(rank, file, diagonalmasks[(index % 8) + 7 - (index / 8)], occupied, piececolor);
+            ulong adiag_moves = SlidingMoves(rank, file, adiagonalmasks[14 - ((index / 8) + (index % 8))], occupied, piececolor);
+
+            return diag_moves | adiag_moves;
         }
 
         public static ulong GetRookMoves(int rank, int file, ulong occupied, ulong piececolor)
         {
             int index = rank * 8 + file;
-            ulong mask = rankmasks[index / 8] | filemasks[index % 8];
-            return SlidingMoves(rank, file, mask, occupied, piececolor);
+            ulong h_moves = SlidingMoves(rank, file, rankmasks[index / 8], occupied, piececolor);
+            ulong v_moves = SlidingMoves(rank, file, filemasks[index % 8], occupied, piececolor);
+
+            return h_moves | v_moves;
         }
 
         public static ulong GetQueenMoves(int rank, int file, ulong occupied, ulong piececolor)
         {
             int index = rank * 8 + file;
-            ulong mask = rankmasks[index / 8] | filemasks[index % 8] | diagonalmasks[(index % 8) + 7 - (index / 8)] | adiagonalmasks[(index / 8) + (index % 8)];
-            return SlidingMoves(rank, file, mask, occupied, piececolor);
+            ulong h_moves = SlidingMoves(rank, file, rankmasks[index / 8], occupied, piececolor);
+            ulong v_moves = SlidingMoves(rank, file, filemasks[index % 8], occupied, piececolor);
+            ulong diag_moves = SlidingMoves(rank, file, diagonalmasks[(index % 8) + 7 - (index / 8)], occupied, piececolor);
+            ulong adiag_moves = SlidingMoves(rank, file, adiagonalmasks[14 - ((index / 8) + (index % 8))], occupied, piececolor);
+
+            return h_moves | v_moves | diag_moves | adiag_moves;
         }
 
         public static ulong GetKingMoves(int rank, int file, ulong piececolor)
@@ -140,7 +149,7 @@ namespace FinalProject
             ulong piece = (ulong)(0x1 << index);
 
             ulong one_step = (piece << 8) & ~occupied;
-            ulong two_step = (one_step << 8) & ~occupied;
+            ulong two_step = ((one_step << 8) & ~occupied) & rankmasks[1];
             ulong pawnmoves = one_step | two_step;
 
             ulong left_attack = (piece & clearA) << 7;
@@ -156,7 +165,7 @@ namespace FinalProject
             ulong piece = (ulong)(0x1 << index);
 
             ulong one_step = (piece >> 8) & ~occupied;
-            ulong two_step = (one_step >> 8) & ~occupied;
+            ulong two_step = ((one_step >> 8) & ~occupied) & rankmasks[6];
             ulong pawnmoves = one_step | two_step;
 
             ulong left_attack = (piece & clearA) >> 9;

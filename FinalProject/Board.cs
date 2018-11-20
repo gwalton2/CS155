@@ -34,7 +34,7 @@ namespace FinalProject
         char[,] _chessboard = new char[8, 8] { { 'R', 'N', 'B', 'Q', 'K', 'B', 'N', 'R' }, //uppercase is white
                                               { 'P', 'P', 'P', 'P', 'P', 'P', 'P', 'P' },
                                               { '-', '-', '-', '-', '-', '-', '-', '-' },
-                                              { '-', '-', '-', '-', '-', '-', '-', '-' }, //Board reversed visually to match index
+                                              { '-', '-', '-', '-', 'B', '-', '-', '-' }, //Board reversed visually to match index
                                               { '-', '-', '-', '-', '-', '-', '-', '-' },
                                               { '-', '-', '-', '-', '-', '-', '-', '-' },
                                               { 'p', 'p', 'p', 'p', 'p', 'p', 'p', 'p' },
