@@ -6,7 +6,7 @@
         xmlns:local="clr-namespace:FinalProject"
         mc:Ignorable="d"
         Title="MainWindow" Height="700" Width="800">
-    
+
     <Window.Resources>
         <Image x:Key="b_bishop" x:Shared="false" Source="icons/black_bishop.png" Height="70" Width="70" />
         <Image x:Key="b_king" x:Shared="false" Source="icons/black_king.png" Height="70" Width="70"/>
@@ -21,7 +21,7 @@
         <Image x:Key="w_queen" x:Shared="false" Source="icons/white_queen.png" Height="70" Width="70"/>
         <Image x:Key="w_rook" x:Shared="false" Source="icons/white_rook.png" Height="70" Width="70"/>
     </Window.Resources>
-    
+
     <Grid>
         <Grid.ColumnDefinitions>
             <ColumnDefinition Width="267*"/>
@@ -92,5 +92,9 @@
         <Button x:Name="_03" Content="" HorizontalAlignment="Left" Margin="230,555,0,0" VerticalAlignment="Top" Width="75" Height="75" Background="White" Grid.ColumnSpan="2" Click="_03_Click"/>
         <Button x:Name="_05" Content="" HorizontalAlignment="Left" Margin="112.667,555,0,0" VerticalAlignment="Top" Width="75" Height="75" Background="White" Grid.Column="1" Click="_05_Click"/>
         <Button x:Name="_07" Content="" HorizontalAlignment="Left" Margin="262.667,555,0,0" VerticalAlignment="Top" Width="75" Height="75" Background="White" Grid.Column="1" Click="_07_Click"/>
+        <Label x:Name="turnLabel" Content="Turn: " Grid.Column="1" HorizontalAlignment="Left" Margin="362.667,105,0,0" VerticalAlignment="Top" FontSize="20" Width="61"/>
+        <Label x:Name="colorLabel" Content="White" Grid.Column="1" HorizontalAlignment="Left" Margin="442.667,111,0,0" VerticalAlignment="Top" FontSize="16" Background="White"/>
+        <Label x:Name="lastmoveLabel" Content="Last Move:" Grid.Column="1" HorizontalAlignment="Left" Margin="362.667,180,0,0" VerticalAlignment="Top" FontSize="20"/>
+        <Label x:Name="moveLabel" Content="Label" Grid.Column="1" HorizontalAlignment="Left" Margin="400.667,222,0,0" VerticalAlignment="Top" FontSize="16"/>
     </Grid>
 </Window>

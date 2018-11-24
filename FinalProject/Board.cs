@@ -8,64 +8,44 @@ namespace FinalProject
 {
     class Board
     {
-        ulong _whitepawns = 0xFF00;
-        ulong _whiteknights = 0x42;
-        ulong _whitebishops = 0x24;
-        ulong _whiterooks = 0x81;
-        ulong _whitequeen = 0x10;
-        ulong _whiteking = 0x8;
+        private Game game;
 
-        ulong _blackpawns = 0xFF000000000000;
-        ulong _blackknights = 0x4200000000000000;
-        ulong _blackbishops = 0x2400000000000000;
-        ulong _blackrooks = 0x8100000000000000;
-        ulong _blackqueen = 0x1000000000000000;
-        ulong _blackking = 0x800000000000000;
-
-        List<ulong> boardList;
-
-        ulong _allwhite;
-        ulong _allblack;
-        ulong _allpieces;
-
-        public Board()
+        public Board(Game game)
         {
-            boardList = new List<ulong> { _whitepawns, _whiteknights, _whitebishops, _whiterooks, _whitequeen, _whiteking,
-                                          _blackpawns, _blackknights, _blackbishops, _blackrooks, _blackqueen, _blackking };
-            Update();
+            ChessBoard.Initialize();
+            this.game = game;
         }
 
-        char[,] _chessboard = new char[8, 8] { { 'R', 'N', 'B', 'Q', 'K', 'B', 'N', 'R' }, //uppercase is white
+        private char[,] _myboard = new char[8, 8] { { 'R', 'N', 'B', 'Q', 'K', 'B', 'N', 'R' }, //uppercase is white
                                               { 'P', 'P', 'P', 'P', 'P', 'P', 'P', 'P' },
                                               { '-', '-', '-', '-', '-', '-', '-', '-' },
                                               { '-', '-', '-', '-', '-', '-', '-', '-' }, //Board reversed visually to match index
                                               { '-', '-', '-', '-', '-', '-', '-', '-' },
                                               { '-', '-', '-', '-', '-', '-', '-', '-' },
                                               { 'p', 'p', 'p', 'p', 'p', 'p', 'p', 'p' },
-                                              { 'r', 'n', 'b', 'q', 'k', 'b', 'n', 'r' } }; // lowercase is black
+                                              { 'r', 'n', 'b', 'q', 'k', 'b', 'n', 'r' } }; // lowercase is black    
 
-        public ulong AllPieces
+        public char[,] MyBoard
         {
-            get { return _allpieces; }
-        }
-
-        public char[,] ChessBoard
-        {
-            get { return _chessboard;  }
-        }
-
-        public void Update()
-        {
-            _allwhite = _whitepawns | _whiteknights | _whitebishops | _whiterooks | _whitequeen | _whiteking;
-            _allblack = _blackpawns | _blackknights | _blackbishops | _blackrooks | _blackqueen | _blackking;
-            _allpieces = _allwhite | _allblack;
+            get { return _myboard;  }
         }
 
         public bool IsOccupied(int rank, int file)
         {
-            char loc = _chessboard[rank, file];
+            char loc = _myboard[rank, file];
 
             return !loc.Equals('-');
+        }
+
+        public bool IsRightColor(int rank, int file)
+        {
+            char piece = _myboard[rank, file];
+            if ((char.IsUpper(piece) & game.Turn == Game.PieceColor.White) ||
+                (!char.IsUpper(piece) & game.Turn == Game.PieceColor.Black))
+            {
+                return true;
+            }
+            return false;
         }
 
         public void MoveCharBoard(int og_index, int new_index)
@@ -75,69 +55,80 @@ namespace FinalProject
             int new_rank = new_index / 8;
             int new_file = new_index % 8;
 
-            char og_char = _chessboard[og_rank, og_file];
-            _chessboard[og_rank, og_file] = '-';
-            _chessboard[new_rank, new_file] = og_char;
+            char og_char = _myboard[og_rank, og_file];
+            _myboard[og_rank, og_file] = '-';
+            _myboard[new_rank, new_file] = og_char;
+
+            game.NextTurn();
         }
 
         public void MoveBitBoard(int og_index, int new_index)
         {
             ulong move = Moves.GetMoveBitboard(og_index, new_index);
-            ulong piece = (ulong)(0x1 << og_index);
+            ulong new_spot = (ulong)0x1 << new_index;
+            ulong old_spot = (ulong)0x1 << og_index;
+            List<ulong> boardList = ChessBoard.BoardList();
 
             for (int i = 0; i < boardList.Count; i++)
             {
-                ulong board = boardList[i];
-                if ((board ^ piece) != board)
+                if ((boardList[i] ^ new_spot) < boardList[i])
                 {
-                    board ^= move;
-                    break;
+                    boardList[i] ^= new_spot;
+                }
+                else if ((boardList[i] ^ old_spot) < boardList[i])
+                {
+                    boardList[i] ^= move;
                 }
             }
-            Update();
+            ChessBoard.MakeMove(boardList);
         }
 
         public ulong GetMoves(int rank, int file)
-        {
-            char piece = _chessboard[rank, file];
+        { 
+            if (!IsRightColor(rank, file))
+            {
+                return 0;
+            }
+
+            char piece = _myboard[rank, file];
 
             switch (piece)
             {
                 case 'r':
-                    return Moves.GetRookMoves(rank, file, _allpieces, _allblack);
+                    return Moves.GetRookMoves(rank, file, ChessBoard.AllPieces, ChessBoard.AllBlack);
 
                 case 'n':
-                    return Moves.GetKnightMoves(rank, file, _allblack);
+                    return Moves.GetKnightMoves(rank, file, ChessBoard.AllBlack);
 
                 case 'b':
-                    return Moves.GetBishopMoves(rank, file, _allpieces, _allblack);
+                    return Moves.GetBishopMoves(rank, file, ChessBoard.AllPieces, ChessBoard.AllBlack);
 
                 case 'q':
-                    return Moves.GetQueenMoves(rank, file, _allpieces, _allblack);
+                    return Moves.GetQueenMoves(rank, file, ChessBoard.AllPieces, ChessBoard.AllBlack);
 
                 case 'k':
-                    return Moves.GetKingMoves(rank, file, _allblack);
+                    return Moves.GetKingMoves(rank, file, ChessBoard.AllBlack);
 
                 case 'p':
-                    return Moves.GetBlackPawnMoves(rank, file, _allpieces, _allwhite);
+                    return Moves.GetBlackPawnMoves(rank, file, ChessBoard.AllPieces, ChessBoard.AllWhite);
 
                 case 'R':
-                    return Moves.GetRookMoves(rank, file, _allpieces, _allwhite);
+                    return Moves.GetRookMoves(rank, file, ChessBoard.AllPieces, ChessBoard.AllWhite);
 
                 case 'N':
-                    return Moves.GetKnightMoves(rank, file, _allwhite);
+                    return Moves.GetKnightMoves(rank, file, ChessBoard.AllWhite);
 
                 case 'B':
-                    return Moves.GetBishopMoves(rank, file, _allpieces, _allwhite);
+                    return Moves.GetBishopMoves(rank, file, ChessBoard.AllPieces, ChessBoard.AllWhite);
 
                 case 'Q':
-                    return Moves.GetQueenMoves(rank, file, _allpieces, _allwhite);
+                    return Moves.GetQueenMoves(rank, file, ChessBoard.AllPieces, ChessBoard.AllWhite);
 
                 case 'K':
-                    return Moves.GetKingMoves(rank, file, _allwhite);
+                    return Moves.GetKingMoves(rank, file, ChessBoard.AllWhite);
 
                 case 'P':
-                    return Moves.GetWhitePawnMoves(rank, file, _allpieces, _allblack);
+                    return Moves.GetWhitePawnMoves(rank, file, ChessBoard.AllPieces, ChessBoard.AllBlack);
 
                 default:
                     return 0;

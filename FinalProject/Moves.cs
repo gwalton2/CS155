@@ -27,7 +27,7 @@ namespace FinalProject
         static ulong clearH = 0x7F7F7F7F7F7F7F7F;
         static ulong clearG = 0xBFBFBFBFBFBFBFBF;
 
-        private static void DrawBitboard(ulong bitBoard)
+        public static void DrawBitboard(ulong bitBoard)
         {
             string[,] chessBoard = new string[8, 8];
             for (int i = 0; i < 64; i++)
@@ -57,8 +57,8 @@ namespace FinalProject
 
         public static ulong GetMoveBitboard(int og_index, int new_index)
         {
-            ulong og_piece = (ulong)(0x1 << og_index);
-            ulong new_piece = (ulong)(0x1 << new_index);
+            ulong og_piece = (ulong)0x1 << og_index;
+            ulong new_piece = (ulong)0x1 << new_index;
 
             return og_piece | new_piece;
         }
@@ -78,7 +78,7 @@ namespace FinalProject
         public static ulong SlidingMoves(int rank, int file, ulong mask, ulong occupied, ulong piececolor)
         {
             int index = rank * 8 + file; //Converts rank and file into index: A1 = 0, H8 = 63
-            ulong s = (ulong)(0x1 << index); //Creates bitboard consisting only of selected piece
+            ulong s = (ulong)0x1 << index; //Creates bitboard consisting only of selected piece
             ulong o = (occupied & ~s) & mask; //Creates final o variable by removing piece from total occupied and focusing on mask
 
             ulong unfiltered = ((o - 2 * s) ^ Reverse(Reverse(o) - 2 * Reverse(s))) & mask; //hyperbola quintessance algorithm
@@ -118,7 +118,7 @@ namespace FinalProject
         public static ulong GetKingMoves(int rank, int file, ulong piececolor)
         {
             int index = rank * 8 + file;
-            ulong piece = (ulong)(0x1 << index);
+            ulong piece = (ulong)0x1 << index;
 
             ulong spot1 = (piece & clearA) << 7;
             ulong spot2 = piece << 8;
@@ -136,7 +136,7 @@ namespace FinalProject
         public static ulong GetKnightMoves(int rank, int file, ulong piececolor)
         {
             int index = rank * 8 + file;
-            ulong piece = (ulong)(0x1 << index);
+            ulong piece = (ulong)0x1 << index;
 
             ulong spot1 = (piece & clearA & clearB) << 6;
             ulong spot2 = (piece & clearA) << 15;
@@ -154,7 +154,7 @@ namespace FinalProject
         public static ulong GetWhitePawnMoves(int rank, int file, ulong occupied, ulong othercolor)
         {
             int index = rank * 8 + file;
-            ulong piece = (ulong)(0x1 << index);
+            ulong piece = (ulong)0x1 << index;
 
             ulong one_step = (piece << 8) & ~occupied;
             ulong two_step = ((piece & rankmasks[1]) << 16) & ~occupied;
@@ -170,7 +170,7 @@ namespace FinalProject
         public static ulong GetBlackPawnMoves(int rank, int file, ulong occupied, ulong othercolor)
         {
             int index = rank * 8 + file;
-            ulong piece = (ulong)(0x1 << index);
+            ulong piece = (ulong)0x1 << index;
 
             ulong one_step = (piece >> 8) & ~occupied;
             ulong two_step = ((piece & rankmasks[6]) >> 16) & ~occupied;
