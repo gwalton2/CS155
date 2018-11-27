@@ -10,12 +10,6 @@ namespace FinalProject
     {
         private Game game;
 
-        public Board(Game game)
-        {
-            ChessBoard.Initialize();
-            this.game = game;
-        }
-
         private char[,] _myboard = new char[8, 8] { { 'R', 'N', 'B', 'Q', 'K', 'B', 'N', 'R' }, //uppercase is white
                                               { 'P', 'P', 'P', 'P', 'P', 'P', 'P', 'P' },
                                               { '-', '-', '-', '-', '-', '-', '-', '-' },
@@ -28,6 +22,12 @@ namespace FinalProject
         public char[,] MyBoard
         {
             get { return _myboard;  }
+        }
+
+        public Board(Game game)
+        {
+            ChessBoard.Initialize();
+            this.game = game;
         }
 
         public bool IsOccupied(int rank, int file)
@@ -55,11 +55,9 @@ namespace FinalProject
             int new_rank = new_index / 8;
             int new_file = new_index % 8;
 
-            char og_char = _myboard[og_rank, og_file];
+            char piece = _myboard[og_rank, og_file];
             _myboard[og_rank, og_file] = '-';
-            _myboard[new_rank, new_file] = og_char;
-
-            game.NextTurn();
+            _myboard[new_rank, new_file] = piece;
         }
 
         public void MoveBitBoard(int og_index, int new_index)
@@ -81,6 +79,7 @@ namespace FinalProject
                 }
             }
             ChessBoard.MakeMove(boardList);
+            game.NextTurn();
         }
 
         public ulong GetMoves(int rank, int file)

@@ -92,9 +92,25 @@
         <Button x:Name="_03" Content="" HorizontalAlignment="Left" Margin="230,555,0,0" VerticalAlignment="Top" Width="75" Height="75" Background="White" Grid.ColumnSpan="2" Click="_03_Click"/>
         <Button x:Name="_05" Content="" HorizontalAlignment="Left" Margin="112.667,555,0,0" VerticalAlignment="Top" Width="75" Height="75" Background="White" Grid.Column="1" Click="_05_Click"/>
         <Button x:Name="_07" Content="" HorizontalAlignment="Left" Margin="262.667,555,0,0" VerticalAlignment="Top" Width="75" Height="75" Background="White" Grid.Column="1" Click="_07_Click"/>
-        <Label x:Name="turnLabel" Content="Turn: " Grid.Column="1" HorizontalAlignment="Left" Margin="362.667,105,0,0" VerticalAlignment="Top" FontSize="20" Width="61"/>
+        <Label x:Name="turnLabel" Content="Turn: " Grid.Column="1" HorizontalAlignment="Left" Margin="376.667,107,0,0" VerticalAlignment="Top" FontSize="20" Width="61"/>
         <Label x:Name="colorLabel" Content="White" Grid.Column="1" HorizontalAlignment="Left" Margin="442.667,111,0,0" VerticalAlignment="Top" FontSize="16" Background="White"/>
-        <Label x:Name="lastmoveLabel" Content="Last Move:" Grid.Column="1" HorizontalAlignment="Left" Margin="362.667,180,0,0" VerticalAlignment="Top" FontSize="20"/>
-        <Label x:Name="moveLabel" Content="Label" Grid.Column="1" HorizontalAlignment="Left" Margin="400.667,222,0,0" VerticalAlignment="Top" FontSize="16"/>
+        <Label x:Name="lastmoveLabel" Content="Last Move:" Grid.Column="1" HorizontalAlignment="Left" Margin="376.667,180,0,0" VerticalAlignment="Top" FontSize="20"/>
+        <Label x:Name="moveLabel" Content="" Grid.Column="1" HorizontalAlignment="Left" Margin="413.667,217,0,0" VerticalAlignment="Top" FontSize="16"/>
+        <Label x:Name="aLabel" Content="a" HorizontalAlignment="Left" Margin="32,630,0,0" VerticalAlignment="Top" FontSize="20"/>
+        <Label x:Name="bLabel" Content="b" HorizontalAlignment="Left" Margin="107,630,0,0" VerticalAlignment="Top" FontSize="20"/>
+        <Label x:Name="cLabel" Content="c" HorizontalAlignment="Left" Margin="182,630,0,0" VerticalAlignment="Top" FontSize="20"/>
+        <Label x:Name="dLabel" Content="d" HorizontalAlignment="Left" Margin="261,630,0,0" VerticalAlignment="Top" FontSize="20" Grid.ColumnSpan="2"/>
+        <Label x:Name="eLabel" Content="e" HorizontalAlignment="Left" Margin="65.667,630,0,0" VerticalAlignment="Top" FontSize="20" Grid.Column="1"/>
+        <Label x:Name="eLabel1" Content="f" HorizontalAlignment="Left" Margin="141.667,630,0,0" VerticalAlignment="Top" FontSize="20" Grid.Column="1"/>
+        <Label x:Name="gLabel" Content="g" HorizontalAlignment="Left" Margin="217.667,630,0,0" VerticalAlignment="Top" FontSize="20" Grid.Column="1"/>
+        <Label x:Name="hLabel" Content="h" HorizontalAlignment="Left" Margin="292.667,630,0,0" VerticalAlignment="Top" FontSize="20" Grid.Column="1"/>
+        <Label x:Name="_1Label" Content="1" HorizontalAlignment="Left" Margin="337.667,572,0,0" VerticalAlignment="Top" FontSize="20" Grid.Column="1"/>
+        <Label x:Name="_2Label" Content="2" HorizontalAlignment="Left" Margin="337.667,499,0,0" VerticalAlignment="Top" FontSize="20" Grid.Column="1"/>
+        <Label x:Name="_3Label" Content="3" HorizontalAlignment="Left" Margin="337.667,425,0,0" VerticalAlignment="Top" FontSize="20" Grid.Column="1"/>
+        <Label x:Name="_4Label" Content="4" HorizontalAlignment="Left" Margin="337.667,347,0,0" VerticalAlignment="Top" FontSize="20" Grid.Column="1"/>
+        <Label x:Name="_5Label" Content="5" HorizontalAlignment="Left" Margin="337.667,275,0,0" VerticalAlignment="Top" FontSize="20" Grid.Column="1"/>
+        <Label x:Name="_6Label" Content="6" HorizontalAlignment="Left" Margin="337.667,199,0,0" VerticalAlignment="Top" FontSize="20" Grid.Column="1"/>
+        <Label x:Name="_7Label" Content="7" HorizontalAlignment="Left" Margin="337.667,125,0,0" VerticalAlignment="Top" FontSize="20" Grid.Column="1"/>
+        <Label x:Name="_8Label" Content="8" HorizontalAlignment="Left" Margin="337.667,50,0,0" VerticalAlignment="Top" FontSize="20" Grid.Column="1"/>
     </Grid>
 </Window>

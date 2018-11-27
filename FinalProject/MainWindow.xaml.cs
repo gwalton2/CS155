@@ -79,6 +79,12 @@ namespace FinalProject
             selected.Content = null;
 
             ChangeTurn();
+            SetLastMove(new_square);
+        }
+
+        private void SetLastMove(Button new_square)
+        {
+
         }
 
         private void ChangeTurn()
