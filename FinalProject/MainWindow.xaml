@@ -95,7 +95,7 @@
         <Label x:Name="turnLabel" Content="Turn: " Grid.Column="1" HorizontalAlignment="Left" Margin="376.667,107,0,0" VerticalAlignment="Top" FontSize="20" Width="61"/>
         <Label x:Name="colorLabel" Content="White" Grid.Column="1" HorizontalAlignment="Left" Margin="442.667,111,0,0" VerticalAlignment="Top" FontSize="16" Background="White"/>
         <Label x:Name="lastmoveLabel" Content="Last Move:" Grid.Column="1" HorizontalAlignment="Left" Margin="376.667,180,0,0" VerticalAlignment="Top" FontSize="20"/>
-        <Label x:Name="moveLabel" Content="" Grid.Column="1" HorizontalAlignment="Left" Margin="413.667,217,0,0" VerticalAlignment="Top" FontSize="16"/>
+        <Label x:Name="moveLabel" Content="" Grid.Column="1" HorizontalAlignment="Left" Margin="401.667,217,0,0" VerticalAlignment="Top" FontSize="16"/>
         <Label x:Name="aLabel" Content="a" HorizontalAlignment="Left" Margin="32,630,0,0" VerticalAlignment="Top" FontSize="20"/>
         <Label x:Name="bLabel" Content="b" HorizontalAlignment="Left" Margin="107,630,0,0" VerticalAlignment="Top" FontSize="20"/>
         <Label x:Name="cLabel" Content="c" HorizontalAlignment="Left" Margin="182,630,0,0" VerticalAlignment="Top" FontSize="20"/>

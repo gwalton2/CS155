@@ -9,6 +9,7 @@ namespace FinalProject
     class Board
     {
         private Game game;
+        private ChessBoard chessboard;
 
         private char[,] _myboard = new char[8, 8] { { 'R', 'N', 'B', 'Q', 'K', 'B', 'N', 'R' }, //uppercase is white
                                               { 'P', 'P', 'P', 'P', 'P', 'P', 'P', 'P' },
@@ -24,9 +25,9 @@ namespace FinalProject
             get { return _myboard;  }
         }
 
-        public Board(Game game)
+        public Board(Game game, ChessBoard chessboard)
         {
-            ChessBoard.Initialize();
+            this.chessboard = chessboard;
             this.game = game;
         }
 
@@ -48,6 +49,63 @@ namespace FinalProject
             return false;
         }
 
+        public bool IsCheck(ulong move, Game.PieceColor color)
+        {
+            List<int> indexes = Moves.ConvertBitboard(move);
+            MoveBitBoard(indexes[0], indexes[1]);
+
+            ulong attacks;
+            ulong king;
+            if (color == Game.PieceColor.White)
+            {
+                king = chessboard.WhiteKing;
+                attacks = Moves.GetAllBlackMoves(chessboard);
+            }
+            else
+            {
+                king = chessboard.BlackKing;
+                attacks = Moves.GetAllWhiteMoves(chessboard);
+            }
+
+            UndoLastMoveBitBoard();
+            return (king & attacks) != 0;
+        }
+
+        public ulong ClipCheck(ulong moves)
+        {
+            ulong index = 1;
+            for (int i = 0; i < 64; i++)
+            {
+                if ((index & moves) != 0)
+                {
+                    if (IsCheck(index, game.Turn))
+                    {
+                        moves ^= index;
+                    }
+                }
+                index <<= 1;
+            }
+            return moves;
+        }
+
+        public void IsCheckMate()
+        {
+            ulong allmoves = 0;
+            if (game.Turn == Game.PieceColor.White)
+            {
+                allmoves = ClipCheck(Moves.GetAllWhiteMoves(chessboard));
+            }
+            else
+            {
+                allmoves = ClipCheck(Moves.GetAllBlackMoves(chessboard));
+            }
+
+            if (allmoves == 0)
+            {
+                game.GameOver = true;
+            }
+        }
+
         public void MoveCharBoard(int og_index, int new_index)
         {
             int og_rank = og_index / 8;
@@ -65,7 +123,7 @@ namespace FinalProject
             ulong move = Moves.GetMoveBitboard(og_index, new_index);
             ulong new_spot = (ulong)0x1 << new_index;
             ulong old_spot = (ulong)0x1 << og_index;
-            List<ulong> boardList = ChessBoard.BoardList();
+            List<ulong> boardList = chessboard.BoardList();
 
             for (int i = 0; i < boardList.Count; i++)
             {
@@ -78,7 +136,13 @@ namespace FinalProject
                     boardList[i] ^= move;
                 }
             }
-            ChessBoard.MakeMove(boardList);
+            chessboard.MakeMove(boardList);
+            game.NextTurn();
+        }
+
+        public void UndoLastMoveBitBoard()
+        {
+            chessboard.UndoLastMove();
             game.NextTurn();
         }
 
@@ -94,40 +158,40 @@ namespace FinalProject
             switch (piece)
             {
                 case 'r':
-                    return Moves.GetRookMoves(rank, file, ChessBoard.AllPieces, ChessBoard.AllBlack);
+                    return ClipCheck(Moves.GetRookMoves(rank, file, chessboard.AllPieces, chessboard.AllBlack));
 
                 case 'n':
-                    return Moves.GetKnightMoves(rank, file, ChessBoard.AllBlack);
+                    return ClipCheck(Moves.GetKnightMoves(rank, file, chessboard.AllBlack));
 
                 case 'b':
-                    return Moves.GetBishopMoves(rank, file, ChessBoard.AllPieces, ChessBoard.AllBlack);
+                    return ClipCheck(Moves.GetBishopMoves(rank, file, chessboard.AllPieces, chessboard.AllBlack));
 
                 case 'q':
-                    return Moves.GetQueenMoves(rank, file, ChessBoard.AllPieces, ChessBoard.AllBlack);
+                    return ClipCheck(Moves.GetQueenMoves(rank, file, chessboard.AllPieces, chessboard.AllBlack));
 
                 case 'k':
-                    return Moves.GetKingMoves(rank, file, ChessBoard.AllBlack);
+                    return ClipCheck(Moves.GetKingMoves(rank, file, chessboard.AllBlack));
 
                 case 'p':
-                    return Moves.GetBlackPawnMoves(rank, file, ChessBoard.AllPieces, ChessBoard.AllWhite);
+                    return ClipCheck(Moves.GetBlackPawnMoves(rank, file, chessboard.AllPieces, chessboard.AllWhite));
 
                 case 'R':
-                    return Moves.GetRookMoves(rank, file, ChessBoard.AllPieces, ChessBoard.AllWhite);
+                    return ClipCheck(Moves.GetRookMoves(rank, file, chessboard.AllPieces, chessboard.AllWhite));
 
                 case 'N':
-                    return Moves.GetKnightMoves(rank, file, ChessBoard.AllWhite);
+                    return ClipCheck(Moves.GetKnightMoves(rank, file, chessboard.AllWhite));
 
                 case 'B':
-                    return Moves.GetBishopMoves(rank, file, ChessBoard.AllPieces, ChessBoard.AllWhite);
+                    return ClipCheck(Moves.GetBishopMoves(rank, file, chessboard.AllPieces, chessboard.AllWhite));
 
                 case 'Q':
-                    return Moves.GetQueenMoves(rank, file, ChessBoard.AllPieces, ChessBoard.AllWhite);
+                    return ClipCheck(Moves.GetQueenMoves(rank, file, chessboard.AllPieces, chessboard.AllWhite));
 
                 case 'K':
-                    return Moves.GetKingMoves(rank, file, ChessBoard.AllWhite);
+                    return ClipCheck(Moves.GetKingMoves(rank, file, chessboard.AllWhite));
 
                 case 'P':
-                    return Moves.GetWhitePawnMoves(rank, file, ChessBoard.AllPieces, ChessBoard.AllBlack);
+                    return ClipCheck(Moves.GetWhitePawnMoves(rank, file, chessboard.AllPieces, chessboard.AllBlack));
 
                 default:
                     return 0;

@@ -8,70 +8,83 @@ namespace FinalProject
 {
     class ChessBoard
     {
-        public static ulong WhitePawns
+        public ulong WhitePawns
         {
             get; set;
         }
-        public static ulong WhiteKnights
+        public ulong WhiteKnights
         {
             get; set;
         }
-        public static ulong WhiteBishops
+        public ulong WhiteBishops
         {
             get; set;
         }
-        public static ulong WhiteRooks
+        public ulong WhiteRooks
         {
             get; set;
         }
-        public static ulong WhiteKing
+        public ulong WhiteKing
         {
             get; set;
         }
-        public static ulong WhiteQueen
-        {
-            get; set;
-        }
-
-        public static ulong BlackPawns
-        {
-            get; set;
-        }
-        public static ulong BlackKnights
-        {
-            get; set;
-        }
-        public static ulong BlackBishops
-        {
-            get; set;
-        }
-        public static ulong BlackRooks
-        {
-            get; set;
-        }
-        public static ulong BlackKing
-        {
-            get; set;
-        }
-        public static ulong BlackQueen
+        public ulong WhiteQueen
         {
             get; set;
         }
 
-        public static ulong AllWhite
+        public ulong BlackPawns
         {
             get; set;
         }
-        public static ulong AllBlack
+        public ulong BlackKnights
         {
             get; set;
         }
-        public static ulong AllPieces
+        public ulong BlackBishops
+        {
+            get; set;
+        }
+        public ulong BlackRooks
+        {
+            get; set;
+        }
+        public ulong BlackKing
+        {
+            get; set;
+        }
+        public ulong BlackQueen
         {
             get; set;
         }
 
-        public static void Initialize()
+        public ulong AllWhite
+        {
+            get; set;
+        }
+        public ulong AllBlack
+        {
+            get; set;
+        }
+        public ulong AllPieces
+        {
+            get; set;
+        }
+
+        public ChessBoard last;
+
+        public ChessBoard()
+        {
+            Initialize();
+            last = null;
+        }
+
+        public ChessBoard(ChessBoard board)
+        {
+            InternalCopy(board);
+        }
+
+        public void Initialize()
         {
             WhitePawns = 0xFF00;
             WhiteKnights = 0x42;
@@ -90,21 +103,23 @@ namespace FinalProject
             Update();
         }
 
-        public static void Update()
+        public void Update()
         {
             AllWhite = WhitePawns | WhiteKnights | WhiteBishops | WhiteRooks | WhiteQueen | WhiteKing;
             AllBlack = BlackPawns | BlackKnights | BlackBishops | BlackRooks | BlackQueen | BlackKing;
             AllPieces = AllWhite | AllBlack;
         }
 
-        public static List<ulong> BoardList()
+        public List<ulong> BoardList()
         {
             return new List<ulong>() { WhitePawns, WhiteKnights, WhiteBishops, WhiteRooks, WhiteKing, WhiteQueen,
                                        BlackPawns, BlackKnights, BlackBishops, BlackRooks, BlackKing, BlackQueen };
         }
 
-        public static void MakeMove(List<ulong> boardList)
+        public void MakeMove(List<ulong> boardList)
         {
+            last = new ChessBoard(this);
+
             WhitePawns = boardList[0];
             WhiteKnights = boardList[1];
             WhiteBishops = boardList[2];
@@ -119,6 +134,31 @@ namespace FinalProject
             BlackKing = boardList[10];
             BlackQueen = boardList[11];
 
+            Update();
+        }
+
+        public void UndoLastMove()
+        {
+            InternalCopy(last);
+        }
+
+        public void InternalCopy(ChessBoard board)
+        {
+            WhitePawns = board.WhitePawns;
+            WhiteKnights = board.WhiteKnights;
+            WhiteBishops = board.WhiteBishops;
+            WhiteRooks = board.WhiteRooks;
+            WhiteQueen = board.WhiteQueen;
+            WhiteKing = board.WhiteKing;
+
+            BlackPawns = board.BlackPawns;
+            BlackKnights = board.BlackKnights;
+            BlackBishops = board.BlackBishops;
+            BlackRooks = board.BlackRooks;
+            BlackQueen = board.BlackQueen;
+            BlackKing = board.BlackKing;
+
+            last = board.last;
             Update();
         }
     }

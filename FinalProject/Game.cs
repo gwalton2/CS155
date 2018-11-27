@@ -15,9 +15,12 @@ namespace FinalProject
             get; set;
         }
 
+        public bool GameOver { get; set; }
+
         public Game()
         {
             Turn = PieceColor.White;
+            GameOver = false;
         }
 
         public void NextTurn()

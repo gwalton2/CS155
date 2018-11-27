@@ -63,6 +63,24 @@ namespace FinalProject
             return og_piece | new_piece;
         }
 
+        public static List<int> ConvertBitboard(ulong bitboard)
+        {
+            List<int> move_indexes = new List<int>();
+
+            int counter = 0;
+            while (bitboard > 0)
+            {
+                ulong square = bitboard & 1;
+                if (square == 1)
+                {
+                    move_indexes.Add(counter);
+                }
+                counter++;
+                bitboard >>= 1;
+            }
+            return move_indexes;
+        }
+
         public static ulong Reverse(ulong orig)
         {
             ulong rev = 0;
@@ -73,6 +91,143 @@ namespace FinalProject
                 orig >>= 1;
             }
             return rev;
+        }
+
+        public static ulong GetAllBlackMoves(ChessBoard chessboard)
+        {
+            ulong kingmoves = 0;
+            ulong king = 1;
+            for (int i = 0; i < 64; i++)
+            {
+                if ((king & chessboard.BlackKing) != 0)
+                {
+                    kingmoves = GetKingMoves(i / 8, i % 8, chessboard.AllBlack);
+                    break;
+                }
+                king <<= 1;
+            }
+
+            ulong queenmoves = 0;
+            ulong queen = 1;
+            for (int i = 0; i < 64; i++)
+            {
+                if ((queen & chessboard.BlackQueen) != 0)
+                {
+                    queenmoves = GetQueenMoves(i / 8, i % 8, chessboard.AllPieces, chessboard.AllBlack);
+                    break;
+                }
+                queen <<= 1;
+            }
+
+            return GetAllBlackPawnMoves(chessboard.BlackPawns, chessboard.AllPieces, chessboard.AllWhite) | GetAllBishopMoves(chessboard.BlackBishops, chessboard.AllPieces, chessboard.AllBlack)
+                | GetAllRookMoves(chessboard.BlackRooks, chessboard.AllPieces, chessboard.AllBlack) | GetAllKnightMoves(chessboard.BlackKnights, chessboard.AllBlack)
+                | kingmoves | queenmoves;
+        }
+
+        public static ulong GetAllWhiteMoves(ChessBoard chessboard)
+        {
+            ulong kingmoves = 0;
+            ulong king = 1;
+            for (int i = 0; i < 64; i++)
+            {
+                if ((king & chessboard.WhiteKing) != 0)
+                {
+                    kingmoves = GetKingMoves(i / 8, i % 8, chessboard.AllWhite);
+                    break;
+                }
+                king <<= 1;
+            }
+
+            ulong queenmoves = 0;
+            ulong queen = 1;
+            for (int i = 0; i < 64; i++)
+            {
+                if ((queen & chessboard.WhiteQueen) != 0)
+                {
+                    queenmoves = GetQueenMoves(i / 8, i % 8, chessboard.AllPieces, chessboard.AllWhite);
+                    break;
+                }
+                queen <<= 1;
+            }
+
+            return GetAllWhitePawnMoves(chessboard.WhitePawns, chessboard.AllPieces, chessboard.AllBlack) | GetAllBishopMoves(chessboard.WhiteBishops, chessboard.AllPieces, chessboard.AllWhite)
+                | GetAllRookMoves(chessboard.WhiteRooks, chessboard.AllPieces, chessboard.AllWhite) | GetAllKnightMoves(chessboard.WhiteKnights, chessboard.AllWhite)
+                | kingmoves | queenmoves;
+        }
+
+        public static ulong GetAllWhitePawnMoves(ulong pawns, ulong occupied, ulong othercolor)
+        {
+            ulong moves = 0;
+            ulong piece = 1;
+            for (int i = 0; i < 64; i++) //Performance can be improved with counter
+            {
+                if ((piece & pawns) != 0)
+                {
+                    moves |= GetWhitePawnMoves(i / 8, i % 8, occupied, othercolor);
+                }
+                piece <<= 1;
+            }
+            return moves;
+        }
+
+        public static ulong GetAllBlackPawnMoves(ulong pawns, ulong occupied, ulong othercolor)
+        {
+            ulong moves = 0;
+            ulong piece = 1;
+            for (int i = 0; i < 64; i++)
+            {
+                if ((piece & pawns) != 0)
+                {
+                    moves |= GetBlackPawnMoves(i / 8, i % 8, occupied, othercolor);
+                }
+                piece <<= 1;
+            }
+            return moves;
+        }
+
+        public static ulong GetAllBishopMoves(ulong bishops, ulong occupied, ulong piececolor)
+        {
+            ulong moves = 0;
+            ulong piece = 1;
+            for (int i = 0; i < 64; i++)
+            {
+                if ((piece & bishops) != 0)
+                {
+                    moves |= GetBishopMoves(i / 8, i % 8, occupied, piececolor);
+                }
+                piece <<= 1;
+            }
+            return moves;
+        }
+
+        public static ulong GetAllKnightMoves(ulong knights, ulong piececolor)
+        {
+            ulong moves = 0;
+            ulong piece = 1;
+            for (int i = 0; i < 64; i++)
+            {
+                if ((piece & knights) != 0)
+                {
+                    moves |= GetKnightMoves(i / 8, i % 8, piececolor);
+                }
+                piece <<= 1;
+            }
+            return moves;
+        }
+
+        public static ulong GetAllRookMoves(ulong rooks, ulong occupied, ulong piececolor)
+        {
+            ulong moves = 0;
+            ulong piece = 1;
+            for (int i = 0; i < 64; i++)
+            {
+                if ((piece & rooks) != 0)
+                {
+                    moves |= GetRookMoves(i / 8, i % 8, occupied, piececolor);
+                }
+                piece <<= 1;
+            }
+            return moves;
         }
 
         public static ulong SlidingMoves(int rank, int file, ulong mask, ulong occupied, ulong piececolor)

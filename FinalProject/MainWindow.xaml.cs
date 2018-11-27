@@ -38,7 +38,7 @@ namespace FinalProject
 
             game = new Game();
     
-            board = new Board(game);
+            board = new Board(game, new ChessBoard());
 
             buttons = new Dictionary<int, Button>
             {
@@ -55,36 +55,52 @@ namespace FinalProject
             CopyBoard();
         }
 
-        private List<int> ConvertBitboard(ulong bitboard)
-        {
-            List<int> move_indexes = new List<int>();
-
-            int counter = 0;
-            while (bitboard > 0)
-            {
-                ulong square = bitboard & 1;
-                if (square == 1)
-                {
-                    move_indexes.Add(counter);
-                }
-                counter++;
-                bitboard >>= 1;
-            }
-            return move_indexes;
-        }
-
         private void Move(Button new_square)
         {
+            if (new_square.Content == null)
+            {
+                SetLastMove(new_square, false);
+            }
+            else
+            {
+                SetLastMove(new_square, true);
+            }
+
             new_square.Content = selected.Content;
             selected.Content = null;
 
+            ResetColor();
             ChangeTurn();
-            SetLastMove(new_square);
         }
 
-        private void SetLastMove(Button new_square)
+        private void SetLastMove(Button new_square, bool captured)
         {
+            Dictionary<int, char> file = new Dictionary<int, char>()
+            {
+                {0, 'a'}, {1, 'b'}, {2, 'c'}, {3, 'd'}, {4, 'e'}, {5, 'f'}, {6, 'g'}, {7, 'h'}
+            };
 
+            int new_index = 0;
+            foreach (int index in buttons.Keys)
+            {
+                if (buttons[index] == new_square)
+                {
+                    new_index = index;
+                    break;
+                }
+            }
+
+            int og_rank = (selected_index / 8) + 1;
+            int og_file = selected_index % 8;
+            int new_rank = (new_index / 8) + 1;
+            int new_file = new_index % 8;
+
+            string move = file[og_file] + og_rank.ToString() + file[new_file] + new_rank.ToString();
+            if (captured)
+            {
+                move += " (capture)";
+            }
+            moveLabel.Content = move;
         }
 
         private void ChangeTurn()
@@ -123,7 +139,7 @@ namespace FinalProject
 
         private void DisplayMoves(ulong moves)
         {
-            List<int> valid_moves = ConvertBitboard(moves);
+            List<int> valid_moves = Moves.ConvertBitboard(moves);
 
             foreach (int i in valid_moves)
             {
@@ -143,7 +159,11 @@ namespace FinalProject
                     if (icon != null)
                     {
                         buttons[index].Content = FindResource(piece_icons[piece]);
-                    } 
+                    }
+                    else
+                    {
+                        buttons[index].Content = null;
+                    }
                 }
             }
         }
