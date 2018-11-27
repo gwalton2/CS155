@@ -20,6 +20,11 @@ namespace Homework_11
             students.Add(student);
         }
 
+        public void Sort()
+        {
+            students.Sort();
+        }
+
         public double Average()
         {
             int total = 0;
@@ -36,11 +41,11 @@ namespace Homework_11
 
             if (students.Count % 2 == 0)
             {
-                return (students[length / 2].Score + students[(length / 2) + 1].Score) / (double)2;
+                return (students[(length / 2) - 1].Score + students[length / 2].Score) / (double)2;
             }
             else
             {
-                return students[(length / 2) + 1].Score;
+                return students[length / 2].Score;
             }
         }
     }
