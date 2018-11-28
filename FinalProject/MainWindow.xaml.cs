@@ -139,8 +139,9 @@ namespace FinalProject
 
         private void DisplayMoves(ulong moves)
         {
-            List<int> valid_moves = Moves.ConvertBitboard(moves);
+            ResetColor();
 
+            List<int> valid_moves = Moves.ConvertBitboard(moves);
             foreach (int i in valid_moves)
             {
                 buttons[i].Background = Brushes.Green;

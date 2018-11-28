@@ -49,10 +49,10 @@ namespace FinalProject
             return false;
         }
 
-        public bool IsCheck(ulong move, Game.PieceColor color)
+        public bool IsCheck(ulong move, int selected, Game.PieceColor color)
         {
-            List<int> indexes = Moves.ConvertBitboard(move);
-            MoveBitBoard(indexes[0], indexes[1]);
+            List<int> index = Moves.ConvertBitboard(move);
+            MoveBitBoard(selected, index[0]);
 
             ulong attacks;
             ulong king;
@@ -71,14 +71,14 @@ namespace FinalProject
             return (king & attacks) != 0;
         }
 
-        public ulong ClipCheck(ulong moves)
+        public ulong ClipCheck(ulong moves, int selected)
         {
             ulong index = 1;
             for (int i = 0; i < 64; i++)
             {
                 if ((index & moves) != 0)
                 {
-                    if (IsCheck(index, game.Turn))
+                    if (IsCheck(index, selected, game.Turn))
                     {
                         moves ^= index;
                     }
@@ -88,7 +88,7 @@ namespace FinalProject
             return moves;
         }
 
-        public void IsCheckMate()
+        /*public void IsCheckMate()
         {
             ulong allmoves = 0;
             if (game.Turn == Game.PieceColor.White)
@@ -104,7 +104,7 @@ namespace FinalProject
             {
                 game.GameOver = true;
             }
-        }
+        }*/
 
         public void MoveCharBoard(int og_index, int new_index)
         {
@@ -153,45 +153,46 @@ namespace FinalProject
                 return 0;
             }
 
+            int selected = rank * 8 + file;
             char piece = _myboard[rank, file];
 
             switch (piece)
             {
                 case 'r':
-                    return ClipCheck(Moves.GetRookMoves(rank, file, chessboard.AllPieces, chessboard.AllBlack));
+                    return ClipCheck(Moves.GetRookMoves(rank, file, chessboard.AllPieces, chessboard.AllBlack), selected);
 
                 case 'n':
-                    return ClipCheck(Moves.GetKnightMoves(rank, file, chessboard.AllBlack));
+                    return ClipCheck(Moves.GetKnightMoves(rank, file, chessboard.AllBlack), selected);
 
                 case 'b':
-                    return ClipCheck(Moves.GetBishopMoves(rank, file, chessboard.AllPieces, chessboard.AllBlack));
+                    return ClipCheck(Moves.GetBishopMoves(rank, file, chessboard.AllPieces, chessboard.AllBlack), selected);
 
                 case 'q':
-                    return ClipCheck(Moves.GetQueenMoves(rank, file, chessboard.AllPieces, chessboard.AllBlack));
+                    return ClipCheck(Moves.GetQueenMoves(rank, file, chessboard.AllPieces, chessboard.AllBlack), selected);
 
                 case 'k':
-                    return ClipCheck(Moves.GetKingMoves(rank, file, chessboard.AllBlack));
+                    return ClipCheck(Moves.GetKingMoves(rank, file, chessboard.AllBlack), selected);
 
                 case 'p':
-                    return ClipCheck(Moves.GetBlackPawnMoves(rank, file, chessboard.AllPieces, chessboard.AllWhite));
+                    return ClipCheck(Moves.GetBlackPawnMoves(rank, file, chessboard.AllPieces, chessboard.AllWhite), selected);
 
                 case 'R':
-                    return ClipCheck(Moves.GetRookMoves(rank, file, chessboard.AllPieces, chessboard.AllWhite));
+                    return ClipCheck(Moves.GetRookMoves(rank, file, chessboard.AllPieces, chessboard.AllWhite), selected);
 
                 case 'N':
-                    return ClipCheck(Moves.GetKnightMoves(rank, file, chessboard.AllWhite));
+                    return ClipCheck(Moves.GetKnightMoves(rank, file, chessboard.AllWhite), selected);
 
                 case 'B':
-                    return ClipCheck(Moves.GetBishopMoves(rank, file, chessboard.AllPieces, chessboard.AllWhite));
+                    return ClipCheck(Moves.GetBishopMoves(rank, file, chessboard.AllPieces, chessboard.AllWhite), selected);
 
                 case 'Q':
-                    return ClipCheck(Moves.GetQueenMoves(rank, file, chessboard.AllPieces, chessboard.AllWhite));
+                    return ClipCheck(Moves.GetQueenMoves(rank, file, chessboard.AllPieces, chessboard.AllWhite), selected);
 
                 case 'K':
-                    return ClipCheck(Moves.GetKingMoves(rank, file, chessboard.AllWhite));
+                    return ClipCheck(Moves.GetKingMoves(rank, file, chessboard.AllWhite), selected);
 
                 case 'P':
-                    return ClipCheck(Moves.GetWhitePawnMoves(rank, file, chessboard.AllPieces, chessboard.AllBlack));
+                    return ClipCheck(Moves.GetWhitePawnMoves(rank, file, chessboard.AllPieces, chessboard.AllBlack), selected);
 
                 default:
                     return 0;

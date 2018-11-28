@@ -90,15 +90,15 @@ namespace FinalProject
             WhiteKnights = 0x42;
             WhiteBishops = 0x24;
             WhiteRooks = 0x81;
-            WhiteQueen = 0x10;
-            WhiteKing = 0x8;
+            WhiteQueen = 0x8;
+            WhiteKing = 0x10;
 
             BlackPawns = 0xFF000000000000;
             BlackKnights = 0x4200000000000000;
             BlackBishops = 0x2400000000000000;
             BlackRooks = 0x8100000000000000;
-            BlackQueen = 0x1000000000000000;
-            BlackKing = 0x800000000000000;
+            BlackQueen = 0x800000000000000;
+            BlackKing = 0x1000000000000000;
 
             Update();
         }
