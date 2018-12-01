@@ -123,19 +123,10 @@ namespace FinalProject
             }
         }
 
-        public void MoveCharBoard(int og_index, int new_index)
+        public void MoveCharEnpassant(int new_index)
         {
-            int og_rank = og_index / 8;
-            int og_file = og_index % 8;
-            int new_rank = new_index / 8;
-            int new_file = new_index % 8;
-            SetLastMove(og_rank, og_file, new_rank, new_file);
-
-            char piece = _myboard[og_rank, og_file];
-            _myboard[og_rank, og_file] = '-';
-            _myboard[new_rank, new_file] = piece;
-
             ulong enpassant = Moves.GetEnPassant(new_index, chessboard);
+
             if (enpassant != 0)
             {
                 int enp_index = Moves.ConvertBitboard(enpassant)[0];
@@ -147,12 +138,48 @@ namespace FinalProject
             }
         }
 
+        public void MoveCharCastle(ulong[] castle)
+        {
+            if (castle[0] != 0)
+            {
+                Console.WriteLine("HI");
+                int og_castle = Moves.ConvertBitboard(castle[1])[0];
+                int new_castle = Moves.ConvertBitboard(castle[0])[0];
+
+                int og_rank = og_castle / 8;
+                int og_file = og_castle % 8;
+                int new_rank = new_castle / 8;
+                int new_file = new_castle % 8;
+
+                char piece = _myboard[og_rank, og_file];
+                _myboard[og_rank, og_file] = '-';
+                _myboard[new_rank, new_file] = piece;
+            }
+        }
+
+        public void MoveCharBoard(int og_index, int new_index)
+        {
+            int og_rank = og_index / 8;
+            int og_file = og_index % 8;
+            int new_rank = new_index / 8;
+            int new_file = new_index % 8;
+
+            char piece = _myboard[og_rank, og_file];
+            _myboard[og_rank, og_file] = '-';
+            _myboard[new_rank, new_file] = piece;
+
+            SetLastMove(og_rank, og_file, new_rank, new_file);
+            MoveCharEnpassant(new_index);
+        }
+
         public void MoveBitBoard(int og_index, int new_index)
         {
             ulong move = Moves.GetMoveBitboard(og_index, new_index);
             ulong new_spot = (ulong)0x1 << new_index;
             ulong old_spot = (ulong)0x1 << og_index;
             ulong enpassant = Moves.GetEnPassant(new_index, chessboard);
+            ulong[] castle = Moves.GetCastle(og_index, new_index, chessboard);
+
             List<ulong> boardList = chessboard.BoardList();
 
             for (int i = 0; i < boardList.Count; i++)
@@ -165,11 +192,15 @@ namespace FinalProject
                 {
                     boardList[i] ^= enpassant;
                 }
+                else if ((boardList[i] ^ castle[1]) < boardList[i])
+                {
+                    boardList[i] ^= (castle[0] | castle[1]);
+                    MoveCharCastle(castle);
+                }
                 else if ((boardList[i] ^ old_spot) < boardList[i])
                 {
                     boardList[i] ^= move;
-
-                    Moves.SetEnPassant(i, og_index, new_index, chessboard);
+                    boardList.Add(Moves.SetEnPassant(i, og_index, new_index));
                 }
             }
             chessboard.MakeMove(boardList);
@@ -207,7 +238,8 @@ namespace FinalProject
                     return ClipCheck(Moves.GetQueenMoves(rank, file, chessboard.AllPieces, chessboard.AllBlack), selected);
 
                 case 'k':
-                    return ClipCheck(Moves.GetKingMoves(rank, file, chessboard.AllBlack), selected);
+                    ulong bkmoves = Moves.GetKingMoves(rank, file, chessboard.AllBlack) | Moves.GetBlackCastleMoves(rank, file, chessboard.AllBlack, this, chessboard);
+                    return ClipCheck(bkmoves, selected);
 
                 case 'p':
                     return ClipCheck(Moves.GetBlackPawnMoves(rank, file, chessboard.AllPieces, chessboard.AllWhite, chessboard.Enpassant), selected);
@@ -225,7 +257,8 @@ namespace FinalProject
                     return ClipCheck(Moves.GetQueenMoves(rank, file, chessboard.AllPieces, chessboard.AllWhite), selected);
 
                 case 'K':
-                    return ClipCheck(Moves.GetKingMoves(rank, file, chessboard.AllWhite), selected);
+                    ulong wkmoves = Moves.GetKingMoves(rank, file, chessboard.AllWhite) | Moves.GetWhiteCastleMoves(rank, file, chessboard.AllWhite, this, chessboard);
+                    return ClipCheck(wkmoves, selected);
 
                 case 'P':
                     return ClipCheck(Moves.GetWhitePawnMoves(rank, file, chessboard.AllPieces, chessboard.AllBlack, chessboard.Enpassant), selected);

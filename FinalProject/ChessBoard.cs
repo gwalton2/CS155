@@ -183,6 +183,8 @@ namespace FinalProject
         {
             last = new ChessBoard(this);
 
+            UpdateCastle(boardList[4], boardList[10], boardList[3], boardList[9]);
+
             WhitePawns = boardList[0];
             WhiteKnights = boardList[1];
             WhiteBishops = boardList[2];
@@ -196,6 +198,8 @@ namespace FinalProject
             BlackRooks = boardList[9];
             BlackKing = boardList[10];
             BlackQueen = boardList[11];
+
+            Enpassant = boardList[12];
 
             Update();
         }

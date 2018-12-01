@@ -93,7 +93,7 @@ namespace FinalProject
             return rev;
         }
 
-        public static void SetEnPassant(int i, int og_index, int new_index, ChessBoard board)
+        public static ulong SetEnPassant(int i, int og_index, int new_index)
         {
             ulong old_piece = (ulong)0x1 << og_index;
             ulong new_piece = (ulong)0x1 << new_index;
@@ -102,20 +102,17 @@ namespace FinalProject
             {
                 if ((rankmasks[1] & old_piece) != 0 && (rankmasks[3] & new_piece) != 0)
                 {
-                    board.Enpassant = new_piece >> 8;
+                    return new_piece >> 8;
                 }
             }
             else if (i == 6) //BlackPawns
             {
                 if ((rankmasks[6] & old_piece) != 0 && (rankmasks[4] & new_piece) != 0)
                 {
-                    board.Enpassant = new_piece << 8;
+                    return new_piece << 8;
                 }
             }
-            else
-            {
-                board.Enpassant = 0;
-            }
+            return 0;
         }
 
         public static ulong GetEnPassant(int new_index, ChessBoard board)
@@ -138,7 +135,7 @@ namespace FinalProject
             }
         }
 
-        public static ulong GetAllBlackMoves(ChessBoard chessboard)
+        public static ulong GetAllBlackMoves(ChessBoard chessboard) //Needs to be fixed to use convertbitboard method
         {
             ulong kingmoves = 0;
             ulong king = 1;
@@ -169,7 +166,7 @@ namespace FinalProject
                 | kingmoves | queenmoves;
         }
 
-        public static ulong GetAllWhiteMoves(ChessBoard chessboard)
+        public static ulong GetAllWhiteMoves(ChessBoard chessboard) //Needs to be fixed to use convertbitboard method
         {
             ulong kingmoves = 0;
             ulong king = 1;
@@ -331,6 +328,66 @@ namespace FinalProject
 
             ulong kingmoves = spot1 | spot2 | spot3 | spot4 | spot5 | spot6 | spot7 | spot8;
             return kingmoves & ~piececolor;
+        }
+
+        public static ulong GetWhiteCastleMoves(int rank, int file, ulong piececolor, Board board, ChessBoard chessboard)
+        {
+            ulong ks = 0;
+            ulong qs = 0;
+            int index = rank * 8 + file;
+            ulong piece = (ulong)0x1 << index;
+
+            if (chessboard.WhiteKingSide && ((piece << 1) & ~piececolor) != 0 && !board.IsCheck(piece << 1, index, Game.PieceColor.White))
+            {
+                ks = piece << 2;
+            }
+            if (chessboard.WhiteQueenSide && ((piece >> 1) & ~piececolor) != 0 && !board.IsCheck(piece >> 1, index, Game.PieceColor.White))
+            {
+                qs = piece >> 2;
+            }
+
+            ulong castles = ks | qs;
+            return castles & ~piececolor;
+        }
+
+        public static ulong GetBlackCastleMoves(int rank, int file, ulong piececolor, Board board, ChessBoard chessboard)
+        {
+            ulong ks = 0;
+            ulong qs = 0;
+            int index = rank * 8 + file;
+            ulong piece = (ulong)0x1 << index;
+
+            if (chessboard.BlackKingSide && ((piece << 1) & ~piececolor) != 0 && !board.IsCheck(piece << 1, index, Game.PieceColor.Black))
+            {
+                ks = piece << 2;
+            }
+            if (chessboard.WhiteQueenSide && ((piece >> 1) & ~piececolor) != 0 && !board.IsCheck(piece >> 1, index, Game.PieceColor.Black))
+            {
+                qs = piece >> 2;
+            }
+
+            ulong castles = ks | qs;
+            return castles & ~piececolor;
+        }
+
+        public static ulong[] GetCastle(int old_index, int new_index, ChessBoard board)
+        {
+            ulong old_piece = (ulong)0x1 << old_index;
+            ulong new_piece = (ulong)0x1 << new_index;
+
+            if (old_piece != board.WhiteKing && old_piece != board.BlackKing)
+            {
+                return new ulong[] { 0, 0 };
+            }
+            else if ((old_piece << 2) == new_piece)
+            {
+                return new ulong[] { old_piece << 1, old_piece << 3 };
+            }
+            else if (old_piece >> 2 == new_piece)
+            {
+                return new ulong[] { old_piece >> 1, old_piece >> 3 };
+            }
+            return new ulong[] { 0, 0 };
         }
 
         public static ulong GetKnightMoves(int rank, int file, ulong piececolor)
