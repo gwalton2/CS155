@@ -71,12 +71,39 @@ namespace FinalProject
             get; set;
         }
 
-        public ChessBoard last;
+        public bool WhiteKingSide
+        {
+            get; set;
+        }
+        public bool WhiteQueenSide
+        {
+            get; set;
+        }
+        public bool BlackKingSide
+        {
+            get; set;
+        }
+        public bool BlackQueenSide
+        {
+            get; set;
+        }
+        public ulong Enpassant
+        {
+            get; set;
+        }
+
+        private ChessBoard last;
 
         public ChessBoard()
         {
             Initialize();
+
+            WhiteKingSide = true;
+            WhiteQueenSide = true;
+            BlackKingSide = true;
+            BlackQueenSide = true;
             last = null;
+            Enpassant = 0;
         }
 
         public ChessBoard(ChessBoard board)
@@ -116,6 +143,42 @@ namespace FinalProject
                                        BlackPawns, BlackKnights, BlackBishops, BlackRooks, BlackKing, BlackQueen };
         }
 
+        private void UpdateCastle(ulong whiteking, ulong blackking, ulong whiterooks, ulong blackrooks)
+        {
+            if (whiteking != WhiteKing)
+            {
+                WhiteKingSide = false;
+                WhiteQueenSide = false;
+            }
+            if (blackking != BlackKing)
+            {
+                BlackKingSide = false;
+                BlackQueenSide = false;
+            }
+
+            ulong whiteks = (ulong)0x1 << 7;
+            ulong whiteqs = (ulong)0x1;
+            if ((whiterooks ^ whiteks) > whiterooks)
+            {
+                WhiteKingSide = false;
+            }
+            if ((whiterooks ^ whiteqs) > whiterooks)
+            {
+                WhiteQueenSide = false;
+            }
+
+            ulong blackks = (ulong)0x1 << 63;
+            ulong blackqs = (ulong)0x1 << 56;
+            if ((blackrooks ^ blackks) > blackrooks)
+            {
+                BlackKingSide = false;
+            }
+            if ((blackrooks ^ blackqs) > blackrooks)
+            {
+                BlackQueenSide = false;
+            }
+        }
+
         public void MakeMove(List<ulong> boardList)
         {
             last = new ChessBoard(this);
@@ -142,7 +205,7 @@ namespace FinalProject
             InternalCopy(last);
         }
 
-        public void InternalCopy(ChessBoard board)
+        private void InternalCopy(ChessBoard board)
         {
             WhitePawns = board.WhitePawns;
             WhiteKnights = board.WhiteKnights;
@@ -158,7 +221,13 @@ namespace FinalProject
             BlackQueen = board.BlackQueen;
             BlackKing = board.BlackKing;
 
+            Enpassant = board.Enpassant;
+            WhiteKingSide = board.WhiteKingSide;
+            WhiteQueenSide = board.WhiteQueenSide;
+            BlackKingSide = board.BlackKingSide;
+            BlackQueenSide = board.BlackQueenSide;
             last = board.last;
+
             Update();
         }
     }

@@ -93,6 +93,51 @@ namespace FinalProject
             return rev;
         }
 
+        public static void SetEnPassant(int i, int og_index, int new_index, ChessBoard board)
+        {
+            ulong old_piece = (ulong)0x1 << og_index;
+            ulong new_piece = (ulong)0x1 << new_index;
+
+            if (i == 0) //WhitePawns
+            {
+                if ((rankmasks[1] & old_piece) != 0 && (rankmasks[3] & new_piece) != 0)
+                {
+                    board.Enpassant = new_piece >> 8;
+                }
+            }
+            else if (i == 6) //BlackPawns
+            {
+                if ((rankmasks[6] & old_piece) != 0 && (rankmasks[4] & new_piece) != 0)
+                {
+                    board.Enpassant = new_piece << 8;
+                }
+            }
+            else
+            {
+                board.Enpassant = 0;
+            }
+        }
+
+        public static ulong GetEnPassant(int new_index, ChessBoard board)
+        {
+            ulong new_piece = (ulong)0x1 << new_index;
+            if (board.Enpassant == new_piece)
+            {
+                if ((board.Enpassant & rankmasks[2]) != 0)
+                {
+                    return board.Enpassant << 8;
+                }
+                else
+                {
+                    return board.Enpassant >> 8;
+                }
+            }
+            else
+            {
+                return 0;
+            }
+        }
+
         public static ulong GetAllBlackMoves(ChessBoard chessboard)
         {
             ulong kingmoves = 0;
@@ -119,7 +164,7 @@ namespace FinalProject
                 queen <<= 1;
             }
 
-            return GetAllBlackPawnMoves(chessboard.BlackPawns, chessboard.AllPieces, chessboard.AllWhite) | GetAllBishopMoves(chessboard.BlackBishops, chessboard.AllPieces, chessboard.AllBlack)
+            return GetAllBlackPawnMoves(chessboard.BlackPawns, chessboard.AllPieces, chessboard.AllWhite, chessboard.Enpassant) | GetAllBishopMoves(chessboard.BlackBishops, chessboard.AllPieces, chessboard.AllBlack)
                 | GetAllRookMoves(chessboard.BlackRooks, chessboard.AllPieces, chessboard.AllBlack) | GetAllKnightMoves(chessboard.BlackKnights, chessboard.AllBlack)
                 | kingmoves | queenmoves;
         }
@@ -150,12 +195,12 @@ namespace FinalProject
                 queen <<= 1;
             }
 
-            return GetAllWhitePawnMoves(chessboard.WhitePawns, chessboard.AllPieces, chessboard.AllBlack) | GetAllBishopMoves(chessboard.WhiteBishops, chessboard.AllPieces, chessboard.AllWhite)
+            return GetAllWhitePawnMoves(chessboard.WhitePawns, chessboard.AllPieces, chessboard.AllBlack, chessboard.Enpassant) | GetAllBishopMoves(chessboard.WhiteBishops, chessboard.AllPieces, chessboard.AllWhite)
                 | GetAllRookMoves(chessboard.WhiteRooks, chessboard.AllPieces, chessboard.AllWhite) | GetAllKnightMoves(chessboard.WhiteKnights, chessboard.AllWhite)
                 | kingmoves | queenmoves;
         }
 
-        public static ulong GetAllWhitePawnMoves(ulong pawns, ulong occupied, ulong othercolor)
+        public static ulong GetAllWhitePawnMoves(ulong pawns, ulong occupied, ulong othercolor, ulong enpassant)
         {
             ulong moves = 0;
             ulong piece = 1;
@@ -163,14 +208,14 @@ namespace FinalProject
             {
                 if ((piece & pawns) != 0)
                 {
-                    moves |= GetWhitePawnMoves(i / 8, i % 8, occupied, othercolor);
+                    moves |= GetWhitePawnMoves(i / 8, i % 8, occupied, othercolor, enpassant);
                 }
                 piece <<= 1;
             }
             return moves;
         }
 
-        public static ulong GetAllBlackPawnMoves(ulong pawns, ulong occupied, ulong othercolor)
+        public static ulong GetAllBlackPawnMoves(ulong pawns, ulong occupied, ulong othercolor, ulong enpassant)
         {
             ulong moves = 0;
             ulong piece = 1;
@@ -178,7 +223,7 @@ namespace FinalProject
             {
                 if ((piece & pawns) != 0)
                 {
-                    moves |= GetBlackPawnMoves(i / 8, i % 8, occupied, othercolor);
+                    moves |= GetBlackPawnMoves(i / 8, i % 8, occupied, othercolor, enpassant);
                 }
                 piece <<= 1;
             }
@@ -306,7 +351,7 @@ namespace FinalProject
             return knightmoves & ~piececolor;
         }
 
-        public static ulong GetWhitePawnMoves(int rank, int file, ulong occupied, ulong othercolor)
+        public static ulong GetWhitePawnMoves(int rank, int file, ulong occupied, ulong othercolor, ulong enpassant)
         {
             int index = rank * 8 + file;
             ulong piece = (ulong)0x1 << index;
@@ -317,12 +362,14 @@ namespace FinalProject
 
             ulong left_attack = (piece & clearA) << 7;
             ulong right_attack = (piece & clearH) << 9;
-            ulong pawn_attacks = (left_attack | right_attack) & othercolor;
+            ulong passant_left_attack = ((piece & clearA) << 7) & enpassant;
+            ulong passant_right_attack = ((piece & clearH) << 9) & enpassant;
+            ulong pawn_attacks = ((left_attack | right_attack) & othercolor) | passant_left_attack | passant_right_attack;
 
             return pawnmoves | pawn_attacks;
         }
 
-        public static ulong GetBlackPawnMoves(int rank, int file, ulong occupied, ulong othercolor)
+        public static ulong GetBlackPawnMoves(int rank, int file, ulong occupied, ulong othercolor, ulong enpassant)
         {
             int index = rank * 8 + file;
             ulong piece = (ulong)0x1 << index;
@@ -333,7 +380,9 @@ namespace FinalProject
 
             ulong left_attack = (piece & clearA) >> 9;
             ulong right_attack = (piece & clearH) >> 7;
-            ulong pawn_attacks = (left_attack | right_attack) & othercolor;
+            ulong passant_left_attack = ((piece & clearA) >> 9) & enpassant;
+            ulong passant_right_attack = ((piece & clearH) >> 7) & enpassant;
+            ulong pawn_attacks = ((left_attack | right_attack) & othercolor) | passant_left_attack | passant_right_attack;
 
             return pawnmoves | pawn_attacks;
         }
