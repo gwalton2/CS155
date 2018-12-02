@@ -112,7 +112,6 @@
         <Label x:Name="_6Label" Content="6" HorizontalAlignment="Left" Margin="337.667,199,0,0" VerticalAlignment="Top" FontSize="20" Grid.Column="1"/>
         <Label x:Name="_7Label" Content="7" HorizontalAlignment="Left" Margin="337.667,125,0,0" VerticalAlignment="Top" FontSize="20" Grid.Column="1"/>
         <Label x:Name="_8Label" Content="8" HorizontalAlignment="Left" Margin="337.667,50,0,0" VerticalAlignment="Top" FontSize="20" Grid.Column="1"/>
-        <Label x:Name="checkmateLabel" Content="" HorizontalAlignment="Left" Margin="128,229,0,0" VerticalAlignment="Top" Height="107" Width="379" FontSize="72" Grid.ColumnSpan="2" Foreground="#FFFF0101"/>
         <Label x:Name="winLabel" Content="" Grid.Column="1" HorizontalAlignment="Left" Margin="358.667,298,0,0" VerticalAlignment="Top" Height="72" Width="164" FontSize="30" FontWeight="Bold"/>
     </Grid>
 </Window>

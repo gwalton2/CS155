@@ -71,7 +71,6 @@ namespace FinalProject
         {
             if (game.GameOver)
             {
-                checkmateLabel.Content = "Checkmate";
                 winLabel.Content = game.Turn + " wins";
             }
         }

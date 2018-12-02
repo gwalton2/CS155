@@ -341,7 +341,7 @@ namespace FinalProject
             {
                 ks = piece << 2;
             }
-            if (chessboard.WhiteQueenSide && ((piece >> 1) & ~piececolor) != 0 && !board.IsCheck(piece >> 1, index, Game.PieceColor.White))
+            if (chessboard.WhiteQueenSide && ((piece >> 1) & ~piececolor) != 0 && ((piece >> 3) & ~piececolor) != 0 && !board.IsCheck(piece >> 1, index, Game.PieceColor.White))
             {
                 qs = piece >> 2;
             }
@@ -361,7 +361,7 @@ namespace FinalProject
             {
                 ks = piece << 2;
             }
-            if (chessboard.BlackQueenSide && ((piece >> 1) & ~piececolor) != 0 && !board.IsCheck(piece >> 1, index, Game.PieceColor.Black))
+            if (chessboard.BlackQueenSide && ((piece >> 1) & ~piececolor) != 0 && ((piece >> 3) & ~piececolor) != 0 && !board.IsCheck(piece >> 1, index, Game.PieceColor.Black))
             {
                 qs = piece >> 2;
             }
@@ -414,7 +414,7 @@ namespace FinalProject
             ulong piece = (ulong)0x1 << index;
 
             ulong one_step = (piece << 8) & ~occupied;
-            ulong two_step = ((piece & rankmasks[1]) << 16) & ~occupied;
+            ulong two_step = ((one_step & rankmasks[2]) << 8) & ~occupied;
             ulong pawnmoves = one_step | two_step;
 
             ulong left_attack = (piece & clearA) << 7;
@@ -432,7 +432,7 @@ namespace FinalProject
             ulong piece = (ulong)0x1 << index;
 
             ulong one_step = (piece >> 8) & ~occupied;
-            ulong two_step = ((piece & rankmasks[6]) >> 16) & ~occupied;
+            ulong two_step = ((one_step & rankmasks[5]) >> 8) & ~occupied;
             ulong pawnmoves = one_step | two_step;
 
             ulong left_attack = (piece & clearA) >> 9;
