@@ -361,7 +361,7 @@ namespace FinalProject
             {
                 ks = piece << 2;
             }
-            if (chessboard.WhiteQueenSide && ((piece >> 1) & ~piececolor) != 0 && !board.IsCheck(piece >> 1, index, Game.PieceColor.Black))
+            if (chessboard.BlackQueenSide && ((piece >> 1) & ~piececolor) != 0 && !board.IsCheck(piece >> 1, index, Game.PieceColor.Black))
             {
                 qs = piece >> 2;
             }
@@ -385,7 +385,7 @@ namespace FinalProject
             }
             else if (old_piece >> 2 == new_piece)
             {
-                return new ulong[] { old_piece >> 1, old_piece >> 3 };
+                return new ulong[] { old_piece >> 1, old_piece >> 4 };
             }
             return new ulong[] { 0, 0 };
         }

@@ -24,6 +24,7 @@ namespace FinalProject
         Button selected;
         int selected_index;
         Game game;
+        ChessBoard chessboard;
 
         Dictionary<int, Button> buttons;
         Dictionary<char, string> piece_icons = new Dictionary<char, string>()
@@ -37,8 +38,9 @@ namespace FinalProject
             InitializeComponent();
 
             game = new Game();
+            chessboard = new ChessBoard();
     
-            board = new Board(game, new ChessBoard());
+            board = new Board(game, chessboard);
 
             buttons = new Dictionary<int, Button>
             {
@@ -62,6 +64,16 @@ namespace FinalProject
             SetLastMove();
 
             CopyBoard();
+            CheckGameOver();
+        }
+
+        private void CheckGameOver()
+        {
+            if (game.GameOver)
+            {
+                checkmateLabel.Content = "Checkmate";
+                winLabel.Content = game.Turn + " wins";
+            }
         }
 
         private void SetLastMove()
@@ -127,6 +139,36 @@ namespace FinalProject
             {
                 buttons[i].Background = Brushes.Green;
             }
+
+            if (board.DisplayCheck)
+            {
+                DisplayCheck();
+            }
+        }
+
+        private void DisplayCheck()
+        {
+            ulong king;
+            if (game.Turn == Game.PieceColor.White)
+            {
+                king = chessboard.WhiteKing;
+            }
+            else
+            {
+                king = chessboard.BlackKing;
+            }
+
+            int index = 0;
+            for (int i = 0; i < 64; i++)
+            {
+                ulong piece = (ulong)0x1 << i;
+                if ((king & piece) != 0)
+                {
+                    index = i;
+                    break;
+                }
+            }
+            buttons[index].Background = Brushes.Red;
         }
 
         private void CopyBoard()

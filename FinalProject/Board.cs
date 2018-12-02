@@ -11,6 +11,7 @@ namespace FinalProject
         private Game game;
         private ChessBoard chessboard;
 
+        private ulong[] _castle = new ulong[] {0, 0};
         private bool _captured;
         private int[] _lastmove;
 
@@ -27,6 +28,7 @@ namespace FinalProject
 
         public bool Captured { get { return _captured; } }
         public int[] Lastmove { get { return _lastmove; } }
+        public bool DisplayCheck { get; set; }
 
         public Board(Game game, ChessBoard chessboard)
         {
@@ -84,6 +86,7 @@ namespace FinalProject
                     if (IsCheck(index, selected, game.Turn))
                     {
                         moves ^= index;
+                        DisplayCheck = true;
                     }
                 }
                 index <<= 1;
@@ -91,23 +94,31 @@ namespace FinalProject
             return moves;
         }
 
-        /*public void IsCheckMate()
+        public void IsCheckMate(Game.PieceColor color)
         {
             ulong allmoves = 0;
-            if (game.Turn == Game.PieceColor.White)
+            for (int i = 0; i < 64; i++)
             {
-                allmoves = ClipCheck(Moves.GetAllWhiteMoves(chessboard));
-            }
-            else
-            {
-                allmoves = ClipCheck(Moves.GetAllBlackMoves(chessboard));
+                char piece = _myboard[i / 8, i % 8];
+                if (piece.Equals('-'))
+                {
+                    continue;
+                }
+                else if (char.IsUpper(piece) && color == Game.PieceColor.White)
+                {
+                    allmoves |= GetMoves(i / 8, i % 8);
+                }
+                else if (char.IsLower(piece) && color == Game.PieceColor.Black)
+                {
+                    allmoves |= GetMoves(i / 8, i % 8);
+                }
             }
 
             if (allmoves == 0)
             {
                 game.GameOver = true;
             }
-        }*/
+        }
 
         private void SetLastMove(int og_rank, int og_file, int new_rank, int new_file)
         {
@@ -138,13 +149,12 @@ namespace FinalProject
             }
         }
 
-        public void MoveCharCastle(ulong[] castle)
+        public void MoveCharCastle()
         {
-            if (castle[0] != 0)
+            if (_castle[0] != 0)
             {
-                Console.WriteLine("HI");
-                int og_castle = Moves.ConvertBitboard(castle[1])[0];
-                int new_castle = Moves.ConvertBitboard(castle[0])[0];
+                int og_castle = Moves.ConvertBitboard(_castle[1])[0];
+                int new_castle = Moves.ConvertBitboard(_castle[0])[0];
 
                 int og_rank = og_castle / 8;
                 int og_file = og_castle % 8;
@@ -170,6 +180,9 @@ namespace FinalProject
 
             SetLastMove(og_rank, og_file, new_rank, new_file);
             MoveCharEnpassant(new_index);
+            MoveCharCastle();
+
+            IsCheckMate(game.Turn);
         }
 
         public void MoveBitBoard(int og_index, int new_index)
@@ -195,7 +208,7 @@ namespace FinalProject
                 else if ((boardList[i] ^ castle[1]) < boardList[i])
                 {
                     boardList[i] ^= (castle[0] | castle[1]);
-                    MoveCharCastle(castle);
+                    _castle = castle;
                 }
                 else if ((boardList[i] ^ old_spot) < boardList[i])
                 {
@@ -211,10 +224,13 @@ namespace FinalProject
         {
             chessboard.UndoLastMove();
             game.NextTurn();
+            _castle = new ulong[] {0, 0};
         }
 
         public ulong GetMoves(int rank, int file)
-        { 
+        {
+            DisplayCheck = false;
+
             if (!IsRightColor(rank, file))
             {
                 return 0;
