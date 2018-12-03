@@ -54,6 +54,23 @@ namespace FinalProject
             return false;
         }
 
+        public bool InCheck(Game.PieceColor color)
+        {
+            ulong attacks;
+            ulong king;
+            if (color == Game.PieceColor.White)
+            {
+                king = chessboard.WhiteKing;
+                attacks = Moves.GetAllBlackMoves(chessboard);
+            }
+            else
+            {
+                king = chessboard.BlackKing;
+                attacks = Moves.GetAllWhiteMoves(chessboard);
+            }
+            return (king & attacks) != 0;
+        }
+
         public bool IsCheck(ulong move, int selected, Game.PieceColor color)
         {
             List<int> index = Moves.ConvertBitboard(move);
@@ -124,13 +141,13 @@ namespace FinalProject
         {
             _lastmove = new int[] { og_rank, og_file, new_rank, new_file };
 
-            if (!_myboard[new_rank, new_file].Equals('-'))
+            if (_myboard[new_rank, new_file].Equals('-'))
             {
-                _captured = true;
+                _captured = false;
             }
             else
             {
-                _captured = false;
+                _captured = true;
             }
         }
 
@@ -173,12 +190,12 @@ namespace FinalProject
             int og_file = og_index % 8;
             int new_rank = new_index / 8;
             int new_file = new_index % 8;
+            SetLastMove(og_rank, og_file, new_rank, new_file);
 
             char piece = _myboard[og_rank, og_file];
             _myboard[og_rank, og_file] = '-';
             _myboard[new_rank, new_file] = piece;
 
-            SetLastMove(og_rank, og_file, new_rank, new_file);
             MoveCharEnpassant(new_index);
             MoveCharCastle();
 

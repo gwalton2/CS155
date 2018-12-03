@@ -337,6 +337,11 @@ namespace FinalProject
             int index = rank * 8 + file;
             ulong piece = (ulong)0x1 << index;
 
+            if (board.InCheck(Game.PieceColor.White))
+            {
+                return 0;
+            }
+
             if (chessboard.WhiteKingSide && ((piece << 1) & ~piececolor) != 0 && !board.IsCheck(piece << 1, index, Game.PieceColor.White))
             {
                 ks = piece << 2;
@@ -356,6 +361,11 @@ namespace FinalProject
             ulong qs = 0;
             int index = rank * 8 + file;
             ulong piece = (ulong)0x1 << index;
+
+            if (board.InCheck(Game.PieceColor.Black))
+            {
+                return 0;
+            }
 
             if (chessboard.BlackKingSide && ((piece << 1) & ~piececolor) != 0 && !board.IsCheck(piece << 1, index, Game.PieceColor.Black))
             {

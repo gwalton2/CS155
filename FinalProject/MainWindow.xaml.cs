@@ -71,7 +71,9 @@ namespace FinalProject
         {
             if (game.GameOver)
             {
+                game.NextTurn();
                 winLabel.Content = game.Turn + " wins";
+                game.NextTurn();
             }
         }
 
