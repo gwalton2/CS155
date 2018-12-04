@@ -8,21 +8,43 @@ namespace FinalProject
 {
     class AI
     {
+        const int INFTY = int.MaxValue;
+        const int WINSCORE = int.MaxValue - 1;   
+
         ChessBoard chessboard;
         Board board;
         Game game;
+        Game.PieceColor mycolor;
+        private int depth;
         private int[] currentmove;
+        private bool GameOver;
 
-        public int FindMove(int depth, int alpha, int beta)
+        public AI(ChessBoard chessboard, Board board, Game game, int depth, Game.PieceColor mycolor)
         {
-            if (depth == 2 || game.GameOver)
+            this.chessboard = chessboard;
+            this.board = board;
+            this.game = game;
+            this.depth = depth;
+            this.mycolor = mycolor;
+            GameOver = false;
+        }
+
+        public int[] GetMove()
+        {
+            FindMove(depth, -INFTY, INFTY);
+            return currentmove;
+        }
+
+        private int FindMove(int depth, int alpha, int beta)
+        {
+            if (depth == 0 || GameOver)
             {
                 return StaticScore();
             }
 
             int[] best = null;
             int score = 0;
-            List<int[]> mymoves = GetMoves(ConvertBoard(), game.Turn);
+            List<int[]> mymoves = GetMoves(ConvertBoard());
 
             int bestsofar = int.MinValue;
             foreach (int[] move in mymoves)
@@ -49,14 +71,14 @@ namespace FinalProject
 
         private int FindMin(int depth, int alpha, int beta)
         {
-            if (depth == 2 || game.GameOver)
+            if (depth == 0 || GameOver)
             {
                 return StaticScore();
             }
 
             int[] best = null;
             int score = 0;
-            List<int[]> mymoves = GetMoves(ConvertBoard(), game.Turn);
+            List<int[]> mymoves = GetMoves(ConvertBoard());
 
             int bestsofar = int.MaxValue;
             foreach (int[] move in mymoves)
@@ -82,7 +104,89 @@ namespace FinalProject
 
         private int StaticScore()
         {
+            if (Win(mycolor))
+            {
+                GameOver = true;
+                return WINSCORE;
+            }
+            if (Win(game.OppositeColor(mycolor)))
+            {
+                GameOver = true;
+                return -WINSCORE;
+            }
 
+            int score = 0;
+            List<List<int>> boardList = ConvertBoard();
+            List<int[,]> scorecharts = new List<int[,]> {whitepawnscore, whiteknightscore, whitebishopscore, whiterookscore, whitekingmiddlescore, whitequeenscore,
+                                                         blackpawnscore, blackknightscore, blackbishopscore, blackrookscore, blackkingmiddlescore, blackqueenscore};
+
+            for (int i = 0; i < 12; i++)
+            {
+                if (i == 4 && IsEndGame())
+                {
+                    score += StaticPieceScore(whitekingendscore, boardList[i]);
+                }
+                else if (i == 10 && IsEndGame())
+                {
+                    score += StaticPieceScore(blackkingendscore, boardList[i]);
+                }
+                else
+                {
+                    score += StaticPieceScore(scorecharts[i], boardList[i]);
+                }
+            }
+
+            if (board.InCheck(mycolor))
+            {
+                score -= 100;
+            }
+            if (board.InCheck(game.OppositeColor(mycolor)))
+            {
+                score += 100;
+            }
+
+            return score;
+        }
+
+        private int StaticPieceScore(int[,] scorechart, List<int> pieces)
+        {
+            int score = 0;
+            foreach (int index in pieces)
+            {
+                score += scorechart[index / 8, index % 8];
+            }
+
+            if (game.Turn == mycolor)
+            {
+                return score;
+            }
+            return -score;
+        }
+
+        public bool IsEndGame()
+        {
+            int count = 0;
+            for (int i = 0; i < 64; i++)
+            {
+                ulong piece = (ulong)0x1 << i;
+                if ((chessboard.AllPieces & piece) != 0)
+                {
+                    count++;
+                }
+            }
+            return count <= 16;
+        }
+
+        private bool Win(Game.PieceColor color)
+        {
+            if (color == Game.PieceColor.White)
+            {
+                return chessboard.BlackKing == 0;
+            }
+            else
+            {
+                return chessboard.WhiteKing == 0;
+            }
         }
 
         private List<List<int>> ConvertBoard()
@@ -97,9 +201,9 @@ namespace FinalProject
             return boardIndexes;
         }
 
-        private List<int[]> GetMoves(List<List<int>> boardIndexes, Game.PieceColor color)
+        private List<int[]> GetMoves(List<List<int>> boardIndexes)
         {
-            if (color == Game.PieceColor.White)
+            if (game.Turn == Game.PieceColor.White)
             {
                 boardIndexes = boardIndexes.GetRange(0, 6);
             }
@@ -114,22 +218,22 @@ namespace FinalProject
                 switch (i)
                 {
                     case 0:
-                        moves.AddRange(GetPawnMoves(boardIndexes[i], color));
+                        moves.AddRange(GetPawnMoves(boardIndexes[i], game.Turn));
                         break;
                     case 1:
-                        moves.AddRange(GetKnightMoves(boardIndexes[i], color));
+                        moves.AddRange(GetKnightMoves(boardIndexes[i], game.Turn));
                         break;
                     case 2:
-                        moves.AddRange(GetBishopMoves(boardIndexes[i], color));
+                        moves.AddRange(GetBishopMoves(boardIndexes[i], game.Turn));
                         break;
                     case 3:
-                        moves.AddRange(GetRookMoves(boardIndexes[i], color));
+                        moves.AddRange(GetRookMoves(boardIndexes[i], game.Turn));
                         break;
                     case 4:
-                        moves.AddRange(GetKingMoves(boardIndexes[i], color));
+                        moves.AddRange(GetKingMoves(boardIndexes[i], game.Turn));
                         break;
                     case 5:
-                        moves.AddRange(GetQueenMoves(boardIndexes[i], color));
+                        moves.AddRange(GetQueenMoves(boardIndexes[i], game.Turn));
                         break;
                 }
             }
@@ -160,7 +264,7 @@ namespace FinalProject
 
                 if (color == Game.PieceColor.White)
                 {
-                    List<int[]> thesemoves = ConvertMove(board.ClipCheck(Moves.GetWhitePawnMoves(rank, file, chessboard.AllPieces, chessboard.AllBlack, chessboard.Enpassant), ind) ind);
+                    List<int[]> thesemoves = ConvertMove(board.ClipCheck(Moves.GetWhitePawnMoves(rank, file, chessboard.AllPieces, chessboard.AllBlack, chessboard.Enpassant), ind), ind);
                     moves.AddRange(thesemoves);
                 }
                 else
@@ -295,7 +399,7 @@ namespace FinalProject
                                                          { 5, 10, 10, -20, -20, 10, 10, 5 },
                                                          { 0, 0, 0, 0, 0, 0, 0, 0 } };
 
-        private static readonly int[,] blackpawnscorew = {{ 0, 0, 0, 0, 0, 0, 0, 0 },
+        private static readonly int[,] blackpawnscore = {{ 0, 0, 0, 0, 0, 0, 0, 0 },
                                                           { 5, 10, 10, -20, -20, 10, 10, 5 },
                                                           { 5, -5, -10, 0, 0, -10, -5, 5 },
                                                           { 0, 0, 0, 20, 20, 0, 0, 0 },

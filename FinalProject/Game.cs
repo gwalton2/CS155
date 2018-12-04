@@ -10,28 +10,40 @@ namespace FinalProject
     {
         public enum PieceColor { White, Black };
 
-        public PieceColor Turn
-        {
-            get; set;
-        }
-
+        public bool isAI { get; }
+        public PieceColor AIColor { get; }
+        public PieceColor Turn { get; set; }
         public bool GameOver { get; set; }
 
         public Game()
         {
             Turn = PieceColor.White;
             GameOver = false;
+            isAI = false;
+        }
+
+        public Game(PieceColor AI)
+        {
+            isAI = true;
+            AIColor = AI;
+            Turn = PieceColor.White;
+            GameOver = false;
         }
 
         public void NextTurn()
         {
-            if (Turn == PieceColor.White)
+            Turn = OppositeColor(Turn);
+        }
+
+        public PieceColor OppositeColor(PieceColor color)
+        {
+            if (color == PieceColor.White)
             {
-                Turn = PieceColor.Black;
+                return PieceColor.Black;
             }
             else
             {
-                Turn = PieceColor.White;
+                return PieceColor.White;
             }
         }
     }
